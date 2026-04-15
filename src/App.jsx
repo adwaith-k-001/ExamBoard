@@ -6,7 +6,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '154690456525-di657ga7kntillmpbkmg4h7e4mm6fs13.apps.googleusercontent.com';
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
