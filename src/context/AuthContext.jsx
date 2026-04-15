@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react';
 
 const VALID_EMAIL = 'adwaith@examboard.local';
 const SESSION_KEY = 'examboard_session';
+const storage = localStorage;
 
 function parseJwt(token) {
   try {
@@ -22,7 +23,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = sessionStorage.getItem(SESSION_KEY);
+    const saved = storage.getItem(SESSION_KEY);
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -35,7 +36,7 @@ export function AuthProvider({ children }) {
       return { ok: false, error: 'Incorrect password.' };
     }
     const session = { uid: 'local', email: email.trim().toLowerCase(), provider: 'local' };
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    storage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return { ok: true };
   };
@@ -53,13 +54,13 @@ export function AuthProvider({ children }) {
       picture:  decoded.picture || null,
       provider: 'google',
     };
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    storage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return { ok: true };
   };
 
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    storage.removeItem(SESSION_KEY);
     setUser(null);
   };
 
