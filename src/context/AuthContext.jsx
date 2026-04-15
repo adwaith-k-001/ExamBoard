@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     if (password !== 'exam2026') {
       return { ok: false, error: 'Incorrect password.' };
     }
-    const session = { email: email.trim().toLowerCase(), provider: 'local' };
+    const session = { uid: 'local', email: email.trim().toLowerCase(), provider: 'local' };
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
     setUser(session);
     return { ok: true };
@@ -47,6 +47,7 @@ export function AuthProvider({ children }) {
       return { ok: false, error: 'Could not verify Google account.' };
     }
     const session = {
+      uid:      decoded.sub,
       email:    decoded.email,
       name:     decoded.name   || decoded.email,
       picture:  decoded.picture || null,
