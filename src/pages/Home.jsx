@@ -1,6 +1,7 @@
 import { SUBJECTS, getNextExam } from '../data/subjects';
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import Countdown from '../components/Countdown';
 import { Clock, TrendingUp, Award } from 'lucide-react';
 
@@ -230,6 +231,7 @@ function TimelineItem({ subject, daysFromNow, t }) {
 ════════════════════════════════════════ */
 export default function Home({ onSelectSubject }) {
   const { t } = useTheme();
+  const isMobile = useIsMobile();
   const nextExam = getNextExam();
   const { getSubjectCompletion } = useProgress();
   const now = new Date();
@@ -245,12 +247,12 @@ export default function Home({ onSelectSubject }) {
 
   return (
     <div style={{
-      padding: '28px 32px', maxWidth: 1200, margin: '0 auto',
-      display: 'flex', flexDirection: 'column', gap: 28,
+      padding: isMobile ? '16px' : '28px 32px', maxWidth: 1200, margin: '0 auto',
+      display: 'flex', flexDirection: 'column', gap: isMobile ? 20 : 28,
     }}>
 
       {/* ── Stats row ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 10 }}>
         <StatCard
           icon={<Clock size={16} />}
           label="Next Exam In"
@@ -299,7 +301,10 @@ export default function Home({ onSelectSubject }) {
 
           <div style={{
             position: 'relative', zIndex: 1,
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32,
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            justifyContent: 'space-between', gap: isMobile ? 20 : 32,
           }}>
             {/* Left info */}
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -348,9 +353,16 @@ export default function Home({ onSelectSubject }) {
             </div>
 
             {/* Right countdown */}
-            <div style={{ flexShrink: 0 }}>
-              <Countdown targetDate={nextExam.examDate} color={nextExam.color} />
-            </div>
+            {!isMobile && (
+              <div style={{ flexShrink: 0 }}>
+                <Countdown targetDate={nextExam.examDate} color={nextExam.color} />
+              </div>
+            )}
+            {isMobile && (
+              <div style={{ alignSelf: 'center' }}>
+                <Countdown targetDate={nextExam.examDate} color={nextExam.color} compact />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -358,7 +370,7 @@ export default function Home({ onSelectSubject }) {
       {/* ── Subject cards ── */}
       <div>
         <SectionLabel label="Subject Progress" t={t} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
           {SUBJECTS.map(s => (
             <SubjectCard key={s.id} subject={s} onSelect={onSelectSubject} t={t} />
           ))}
@@ -368,7 +380,7 @@ export default function Home({ onSelectSubject }) {
       {/* ── Exam timeline ── */}
       <div>
         <SectionLabel label="Exam Schedule" t={t} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(6, 1fr)', gap: 10 }}>
           {SUBJECTS.map(s => {
             const diffDays = Math.ceil((new Date(s.examDate) - now) / 864e5);
             return <TimelineItem key={s.id} subject={s} daysFromNow={diffDays} t={t} />;

@@ -163,11 +163,20 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
 }
 
 /* ── Main sidebar ── */
-export default function Sidebar({ activeSubject, onSelectSubject }) {
+export default function Sidebar({ activeSubject, onSelectSubject, isMobile, isOpen, onClose }) {
   const { t } = useTheme();
   const { getSubjectCompletion } = useProgress();
   const { logout } = useAuth();
   const now = new Date();
+
+  const mobileStyle = isMobile ? {
+    position: 'fixed',
+    left: 0, top: 0, bottom: 0,
+    zIndex: 100,
+    transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+    transition: 'transform 0.25s ease',
+    boxShadow: isOpen ? '4px 0 24px rgba(0,0,0,0.3)' : 'none',
+  } : {};
 
   return (
     <aside style={{
@@ -178,6 +187,7 @@ export default function Sidebar({ activeSubject, onSelectSubject }) {
       background: t.surface,
       borderRight: `1px solid ${t.br}`,
       height: '100%',
+      ...mobileStyle,
     }}>
 
       {/* ── Brand ── */}

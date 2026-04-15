@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { SUBJECTS } from '../data/subjects';
 import { Sun, Moon } from 'lucide-react';
 
@@ -10,6 +11,7 @@ export default function Login() {
   const { login, loginWithGoogle } = useAuth();
   const navigate     = useNavigate();
   const { t, mode, toggle } = useTheme();
+  const isMobile = useIsMobile();
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [error,    setError]    = useState('');
@@ -45,7 +47,7 @@ export default function Login() {
       ════════════════════════════════════════ */}
       <div style={{
         width: '43%',
-        display: 'flex',
+        display: isMobile ? 'none' : 'flex',
         flexDirection: 'column',
         padding: '44px 52px',
         background: t.loginLeft,

@@ -3,6 +3,7 @@ import { SUBJECTS } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, hasModuleDetail } from '../data/cgModuleData';
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import Countdown from '../components/Countdown';
 import { PdfViewerModal } from '../components/ResourceModals';
 import { CheckSquare, BarChart2, Check, Eye, BookOpen, ChevronRight } from 'lucide-react';
@@ -213,6 +214,7 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
 ════════════════════════════════════════ */
 export default function SubjectPage({ subjectId, onOpenModule }) {
   const { t } = useTheme();
+  const isMobile = useIsMobile();
   const subject = SUBJECTS.find(s => s.id === subjectId);
   const { progress, toggleModule, getSubjectCompletion } = useProgress();
   const [pdfModalKey, setPdfModalKey] = useState(null); // 'syllabus' | 'pyq'
@@ -230,13 +232,13 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
 
   return (
     <div style={{
-      padding: '28px 32px', maxWidth: 1200, margin: '0 auto',
-      display: 'flex', flexDirection: 'column', gap: 28,
+      padding: isMobile ? '16px' : '28px 32px', maxWidth: 1200, margin: '0 auto',
+      display: 'flex', flexDirection: 'column', gap: isMobile ? 20 : 28,
     }}>
 
       {/* ── Subject header banner ── */}
       <div style={{
-        padding: '28px 32px', borderRadius: 16,
+        padding: isMobile ? '20px 18px' : '28px 32px', borderRadius: 16,
         background: t.hero,
         border: `1px solid ${subject.color}1E`,
         position: 'relative', overflow: 'hidden',
@@ -254,7 +256,10 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
 
         <div style={{
           position: 'relative', zIndex: 1,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32,
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          justifyContent: 'space-between', gap: isMobile ? 16 : 32,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
@@ -321,7 +326,7 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
             </div>
           </div>
 
-          {!isPast && (
+          {!isPast && !isMobile && (
             <div style={{
               flexShrink: 0, paddingLeft: 32,
               borderLeft: `1px solid ${t.brS}`,
@@ -380,7 +385,7 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
       {/* ── Resources ── */}
       <div>
         <SectionLabel label="Resources" t={t} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 10 }}>
           {RESOURCES.map(r => {
             const data    = subject.links?.[r.key];
             const files   = Array.isArray(data) ? data : [];
