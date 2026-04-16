@@ -93,22 +93,22 @@ const DARK = {
 };
 
 /* ══════════════════════════════════════════════════
-   LIGHT  — Warm Parchment
+   LIGHT  — Warm Parchment (deeper)
 ══════════════════════════════════════════════════ */
 const LIGHT = {
-  // Backgrounds — warm cream / yellow / beige
-  bg:        '#FFFBF0',
-  surface:   '#FFFEF8',
-  card:      '#FFFEF8',
-  cardAlt:   '#FFF7E0',
-  hero:      'linear-gradient(135deg, #FFFEF4 0%, #FFF7D6 100%)',
+  // Backgrounds — deeper warm tan / parchment
+  bg:        '#EDE3C4',
+  surface:   '#F3EACE',
+  card:      '#F3EACE',
+  cardAlt:   '#E8DEB8',
+  hero:      'linear-gradient(135deg, #F0E8CE 0%, #E6DAB0 100%)',
 
-  // Borders — warm amber tint
-  br:    'rgba(161,120,0,0.15)',
-  brS:   'rgba(161,120,0,0.10)',
-  brC:   'rgba(161,120,0,0.13)',
-  brCD:  'rgba(161,120,0,0.20)',
-  brI:   'rgba(161,120,0,0.17)',
+  // Borders — warm amber tint (slightly stronger)
+  br:    'rgba(130,95,0,0.22)',
+  brS:   'rgba(130,95,0,0.16)',
+  brC:   'rgba(130,95,0,0.20)',
+  brCD:  'rgba(130,95,0,0.30)',
+  brI:   'rgba(130,95,0,0.26)',
 
   // Text — warm dark brown scale
   t1:    '#1C1205',
@@ -130,54 +130,54 @@ const LIGHT = {
   tH:    'rgba(28,18,5,0.74)',
 
   // Interactive — warm amber tints
-  inputBg:   'rgba(161,120,0,0.05)',
-  inputBgF:  'rgba(180,83,9,0.08)',
-  hoverBg:   'rgba(161,120,0,0.07)',
-  activeBg:  'rgba(180,83,9,0.09)',
-  subtleBg:  'rgba(161,120,0,0.05)',
+  inputBg:   'rgba(130,95,0,0.08)',
+  inputBgF:  'rgba(180,83,9,0.12)',
+  hoverBg:   'rgba(130,95,0,0.11)',
+  activeBg:  'rgba(180,83,9,0.14)',
+  subtleBg:  'rgba(130,95,0,0.08)',
 
   // Countdown block
-  cdBg:     'rgba(161,120,0,0.05)',
-  cdBr:     'rgba(161,120,0,0.15)',
+  cdBg:     'rgba(130,95,0,0.08)',
+  cdBr:     'rgba(130,95,0,0.22)',
   cdText:   '#1C1205',
-  cdInset:  'inset 0 1px 0 rgba(255,248,210,0.9)',
+  cdInset:  'inset 0 1px 0 rgba(255,240,180,0.6)',
 
   // Structure
-  divider:  'rgba(161,120,0,0.09)',
-  ring:     'rgba(161,120,0,0.13)',
-  glass:    'rgba(255,251,240,0.93)',
-  pillBg:   'rgba(161,120,0,0.06)',
-  pillBr:   'rgba(161,120,0,0.13)',
+  divider:  'rgba(130,95,0,0.14)',
+  ring:     'rgba(130,95,0,0.18)',
+  glass:    'rgba(237,227,196,0.94)',
+  pillBg:   'rgba(130,95,0,0.09)',
+  pillBr:   'rgba(130,95,0,0.20)',
 
   // Sidebar nav — warm amber accent
-  navActive:   '#B45309',
-  navInactive: 'rgba(28,18,5,0.46)',
-  navHoverBg:  'rgba(161,120,0,0.08)',
-  navHoverT:   'rgba(28,18,5,0.74)',
-  navLabel:    'rgba(28,18,5,0.28)',
-  navActiveBg: 'rgba(180,83,9,0.10)',
-  navInd:      'linear-gradient(180deg, #D97706, #F59E0B)',
+  navActive:   '#92400E',
+  navInactive: 'rgba(28,18,5,0.50)',
+  navHoverBg:  'rgba(130,95,0,0.12)',
+  navHoverT:   'rgba(28,18,5,0.76)',
+  navLabel:    'rgba(28,18,5,0.32)',
+  navActiveBg: 'rgba(146,64,14,0.12)',
+  navInd:      'linear-gradient(180deg, #B45309, #D97706)',
 
-  // Login page — warm beige left panel
-  loginLeft:    'linear-gradient(160deg, #FFF8E6 0%, #FFF1C2 55%, #FFEAA0 100%)',
-  loginPillBg:  'rgba(180,83,9,0.06)',
-  loginPillBr:  'rgba(180,83,9,0.15)',
-  loginRight:   '#FFFBF0',
-  loginGrid:    0.07,
-  loginGlow1:   'rgba(217,119,6,0.12)',
-  loginGlow2:   'rgba(245,158,11,0.09)',
-  loginAccGrad: 'linear-gradient(135deg, #92400E 0%, #D97706 100%)',
+  // Login page — deeper warm beige left panel
+  loginLeft:    'linear-gradient(160deg, #EDE3C4 0%, #E4D5A0 55%, #D8C880 100%)',
+  loginPillBg:  'rgba(146,64,14,0.08)',
+  loginPillBr:  'rgba(146,64,14,0.20)',
+  loginRight:   '#EDE3C4',
+  loginGrid:    0.09,
+  loginGlow1:   'rgba(180,83,9,0.14)',
+  loginGlow2:   'rgba(217,119,6,0.10)',
+  loginAccGrad: 'linear-gradient(135deg, #78350F 0%, #B45309 100%)',
 
   // Brand
-  brand: 'linear-gradient(135deg, #1C1205 40%, #D97706)',
+  brand: 'linear-gradient(135deg, #1C1205 40%, #B45309)',
 
   // Resource cards
-  resBg: '#FFF7E0',
-  resBr: 'rgba(161,120,0,0.12)',
+  resBg: '#E8DEB8',
+  resBr: 'rgba(130,95,0,0.18)',
 
   // Schedule items
-  schBg: 'rgba(161,120,0,0.05)',
-  schBr: 'rgba(161,120,0,0.11)',
+  schBg: 'rgba(130,95,0,0.08)',
+  schBr: 'rgba(130,95,0,0.16)',
 
   // Module done-state hex alpha suffixes (appended to subject color)
   doneBgA: '0E',
