@@ -270,34 +270,20 @@ export default function Home({ onSelectSubject }) {
 
       {/* ── Stats row ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 10 }}>
-        <StatCard
-          icon={<Clock size={16} />}
-          label="Next Exam In"
-          value={nextDays > 0 ? `${nextDays}d` : nextDays === 0 ? 'Today!' : '—'}
-          sub={nextExam ? nextExam.name : 'All done'}
-          accent="#6366F1"
-          t={t}
-        />
-        <StatCard
-          icon={<TrendingUp size={16} />}
-          label="Overall Progress"
-          value={`${totalPct}%`}
-          sub={`${started} of 6 subjects started`}
-          accent="#10B981"
-          t={t}
-        />
-        <StatCard
-          icon={<Award size={16} />}
-          label="Exams Remaining"
-          value={remaining}
-          sub={`${6 - remaining} completed`}
-          accent="#F59E0B"
-          t={t}
-        />
+        {[
+          { icon: <Clock size={16} />, label: 'Next Exam In',      value: nextDays > 0 ? `${nextDays}d` : nextDays === 0 ? 'Today!' : '—', sub: nextExam ? nextExam.name : 'All done',      accent: '#6366F1' },
+          { icon: <TrendingUp size={16} />, label: 'Overall Progress', value: `${totalPct}%`,   sub: `${started} of 6 subjects started`,           accent: '#10B981' },
+          { icon: <Award size={16} />, label: 'Exams Remaining',   value: remaining,             sub: `${6 - remaining} completed`,                 accent: '#F59E0B' },
+        ].map((card, i) => (
+          <div key={card.label} className="animate-slide-up" style={{ animationDelay: `${i * 0.07}s` }}>
+            <StatCard icon={card.icon} label={card.label} value={card.value} sub={card.sub} accent={card.accent} t={t} />
+          </div>
+        ))}
       </div>
 
       {/* ── Hero: next exam countdown ── */}
       {nextExam && (
+        <div className="animate-slide-up" style={{ animationDelay: '0.18s' }}>
         <div style={{
           padding: '28px 32px', borderRadius: 16,
           background: t.hero,
@@ -382,14 +368,17 @@ export default function Home({ onSelectSubject }) {
             )}
           </div>
         </div>
+        </div>
       )}
 
       {/* ── Subject cards ── */}
       <div>
         <SectionLabel label="Subject Progress" t={t} />
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
-          {SUBJECTS.map(s => (
-            <SubjectCard key={s.id} subject={s} onSelect={onSelectSubject} t={t} />
+          {SUBJECTS.map((s, i) => (
+            <div key={s.id} className="animate-slide-up" style={{ animationDelay: `${i * 0.06}s` }}>
+              <SubjectCard subject={s} onSelect={onSelectSubject} t={t} />
+            </div>
           ))}
         </div>
       </div>

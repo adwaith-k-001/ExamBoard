@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { SUBJECTS } from '../data/subjects';
 import { hasModuleDetail, CG_MODULE_DATA, CG_QPS } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
@@ -43,6 +43,7 @@ const ProgressContext = createContext(null);
 export function ProgressProvider({ children }) {
   const { user } = useAuth();
   const [progress, setProgress] = useState(loadLocal);
+  const firestoreTimer = useRef(null);
 
   // ── Load from Firestore when user logs in ──
   useEffect(() => {
@@ -58,12 +59,15 @@ export function ProgressProvider({ children }) {
       .catch(err => console.error('Firestore load error:', err));
   }, [user?.uid]);
 
-  // ── Save to localStorage + Firestore ──
+  // ── Save to localStorage + Firestore (debounced 1.5s) ──
   function persist(data) {
     saveLocal(data);
     if (user?.uid && user.uid !== 'local') {
-      setDoc(doc(db, 'users', user.uid), { progress: data }, { merge: true })
-        .catch(err => console.error('Firestore save error:', err));
+      clearTimeout(firestoreTimer.current);
+      firestoreTimer.current = setTimeout(() => {
+        setDoc(doc(db, 'users', user.uid), { progress: data }, { merge: true })
+          .catch(err => console.error('Firestore save error:', err));
+      }, 1500);
     }
   }
 

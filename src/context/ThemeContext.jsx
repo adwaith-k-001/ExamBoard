@@ -93,81 +93,93 @@ const DARK = {
 };
 
 /* ══════════════════════════════════════════════════
-   LIGHT  — Obsidian Day
+   LIGHT  — Warm Parchment
 ══════════════════════════════════════════════════ */
 const LIGHT = {
-  bg:        '#F3F5FB',
-  surface:   '#FFFFFF',
-  card:      '#FFFFFF',
-  cardAlt:   '#F4F6FC',
-  hero:      'linear-gradient(135deg, #FFFFFF 0%, #F4F7FD 100%)',
+  // Backgrounds — warm cream / yellow / beige
+  bg:        '#FFFBF0',
+  surface:   '#FFFEF8',
+  card:      '#FFFEF8',
+  cardAlt:   '#FFF7E0',
+  hero:      'linear-gradient(135deg, #FFFEF4 0%, #FFF7D6 100%)',
 
-  br:    'rgba(0,0,0,0.08)',
-  brS:   'rgba(0,0,0,0.06)',
-  brC:   'rgba(0,0,0,0.08)',
-  brCD:  'rgba(0,0,0,0.10)',
-  brI:   'rgba(0,0,0,0.10)',
+  // Borders — warm amber tint
+  br:    'rgba(161,120,0,0.15)',
+  brS:   'rgba(161,120,0,0.10)',
+  brC:   'rgba(161,120,0,0.13)',
+  brCD:  'rgba(161,120,0,0.20)',
+  brI:   'rgba(161,120,0,0.17)',
 
-  t1:    '#0F172A',
-  t1b:   '#1E293B',
-  t2:    '#475569',
-  t50:   'rgba(15,23,42,0.65)',
-  t45:   'rgba(15,23,42,0.62)',
-  t40:   'rgba(15,23,42,0.58)',
-  t35:   'rgba(15,23,42,0.52)',
-  t33:   'rgba(15,23,42,0.50)',
-  t30:   'rgba(15,23,42,0.46)',
-  t28:   'rgba(15,23,42,0.42)',
-  t25:   'rgba(15,23,42,0.38)',
-  t22:   'rgba(15,23,42,0.34)',
-  t20:   'rgba(15,23,42,0.30)',
-  t18:   'rgba(15,23,42,0.26)',
-  t15:   'rgba(15,23,42,0.22)',
-  t12:   'rgba(15,23,42,0.18)',
-  tH:    'rgba(15,23,42,0.72)',
+  // Text — warm dark brown scale
+  t1:    '#1C1205',
+  t1b:   '#2D1F08',
+  t2:    '#6B5332',
+  t50:   'rgba(28,18,5,0.68)',
+  t45:   'rgba(28,18,5,0.64)',
+  t40:   'rgba(28,18,5,0.60)',
+  t35:   'rgba(28,18,5,0.54)',
+  t33:   'rgba(28,18,5,0.50)',
+  t30:   'rgba(28,18,5,0.46)',
+  t28:   'rgba(28,18,5,0.42)',
+  t25:   'rgba(28,18,5,0.38)',
+  t22:   'rgba(28,18,5,0.34)',
+  t20:   'rgba(28,18,5,0.30)',
+  t18:   'rgba(28,18,5,0.26)',
+  t15:   'rgba(28,18,5,0.22)',
+  t12:   'rgba(28,18,5,0.18)',
+  tH:    'rgba(28,18,5,0.74)',
 
-  inputBg:   'rgba(0,0,0,0.04)',
-  inputBgF:  'rgba(99,102,241,0.06)',
-  hoverBg:   'rgba(0,0,0,0.04)',
-  activeBg:  'rgba(99,102,241,0.07)',
-  subtleBg:  'rgba(0,0,0,0.025)',
+  // Interactive — warm amber tints
+  inputBg:   'rgba(161,120,0,0.05)',
+  inputBgF:  'rgba(180,83,9,0.08)',
+  hoverBg:   'rgba(161,120,0,0.07)',
+  activeBg:  'rgba(180,83,9,0.09)',
+  subtleBg:  'rgba(161,120,0,0.05)',
 
-  cdBg:     'rgba(0,0,0,0.04)',
-  cdBr:     'rgba(0,0,0,0.10)',
-  cdText:   '#0F172A',
-  cdInset:  'inset 0 1px 0 rgba(0,0,0,0.04)',
+  // Countdown block
+  cdBg:     'rgba(161,120,0,0.05)',
+  cdBr:     'rgba(161,120,0,0.15)',
+  cdText:   '#1C1205',
+  cdInset:  'inset 0 1px 0 rgba(255,248,210,0.9)',
 
-  divider:  'rgba(0,0,0,0.07)',
-  ring:     'rgba(0,0,0,0.08)',
-  glass:    'rgba(243,245,251,0.92)',
-  pillBg:   'rgba(0,0,0,0.03)',
-  pillBr:   'rgba(0,0,0,0.08)',
+  // Structure
+  divider:  'rgba(161,120,0,0.09)',
+  ring:     'rgba(161,120,0,0.13)',
+  glass:    'rgba(255,251,240,0.93)',
+  pillBg:   'rgba(161,120,0,0.06)',
+  pillBr:   'rgba(161,120,0,0.13)',
 
-  navActive:   '#4F46E5',
-  navInactive: 'rgba(15,23,42,0.45)',
-  navHoverBg:  'rgba(0,0,0,0.04)',
-  navHoverT:   'rgba(15,23,42,0.72)',
-  navLabel:    'rgba(15,23,42,0.30)',
-  navActiveBg: 'rgba(99,102,241,0.08)',
-  navInd:      'linear-gradient(180deg, #6366F1, #8B5CF6)',
+  // Sidebar nav — warm amber accent
+  navActive:   '#B45309',
+  navInactive: 'rgba(28,18,5,0.46)',
+  navHoverBg:  'rgba(161,120,0,0.08)',
+  navHoverT:   'rgba(28,18,5,0.74)',
+  navLabel:    'rgba(28,18,5,0.28)',
+  navActiveBg: 'rgba(180,83,9,0.10)',
+  navInd:      'linear-gradient(180deg, #D97706, #F59E0B)',
 
-  loginLeft:    'linear-gradient(160deg, #EEF0FA 0%, #E9ECF5 55%, #E4E8F2 100%)',
-  loginPillBg:  'rgba(99,102,241,0.05)',
-  loginPillBr:  'rgba(99,102,241,0.12)',
-  loginRight:   '#F3F5FB',
-  loginGrid:    0.055,
-  loginGlow1:   'rgba(99,102,241,0.06)',
-  loginGlow2:   'rgba(139,92,246,0.04)',
-  loginAccGrad: 'linear-gradient(135deg, #4338CA 0%, #7C3AED 100%)',
+  // Login page — warm beige left panel
+  loginLeft:    'linear-gradient(160deg, #FFF8E6 0%, #FFF1C2 55%, #FFEAA0 100%)',
+  loginPillBg:  'rgba(180,83,9,0.06)',
+  loginPillBr:  'rgba(180,83,9,0.15)',
+  loginRight:   '#FFFBF0',
+  loginGrid:    0.07,
+  loginGlow1:   'rgba(217,119,6,0.12)',
+  loginGlow2:   'rgba(245,158,11,0.09)',
+  loginAccGrad: 'linear-gradient(135deg, #92400E 0%, #D97706 100%)',
 
-  brand: 'linear-gradient(135deg, #1E293B 40%, #4F46E5)',
+  // Brand
+  brand: 'linear-gradient(135deg, #1C1205 40%, #D97706)',
 
-  resBg: '#F4F6FC',
-  resBr: 'rgba(0,0,0,0.07)',
+  // Resource cards
+  resBg: '#FFF7E0',
+  resBr: 'rgba(161,120,0,0.12)',
 
-  schBg: 'rgba(0,0,0,0.025)',
-  schBr: 'rgba(0,0,0,0.07)',
+  // Schedule items
+  schBg: 'rgba(161,120,0,0.05)',
+  schBr: 'rgba(161,120,0,0.11)',
 
+  // Module done-state hex alpha suffixes (appended to subject color)
   doneBgA: '0E',
   doneBrA: '22',
 };

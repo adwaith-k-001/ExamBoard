@@ -56,7 +56,7 @@ function ToggleChip({ active, onClick, icon, label, color, t }) {
   );
 }
 
-function CheckBox({ done, onClick, color }) {
+function CheckBox({ done, onClick, color, t }) {
   return (
     <button
       onClick={onClick}
@@ -64,7 +64,7 @@ function CheckBox({ done, onClick, color }) {
         width: 22, height: 22, borderRadius: 6, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: done ? color : 'transparent',
-        border: `2px solid ${done ? color : 'rgba(255,255,255,0.12)'}`,
+        border: `2px solid ${done ? color : t.brI}`,
         boxShadow: done ? `0 0 8px ${color}44` : 'none',
         cursor: 'pointer',
         transition: 'all 0.18s ease',
@@ -205,7 +205,7 @@ function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t })
                   width: 22, height: 22, borderRadius: 6, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: done ? '#10b981' : 'transparent',
-                  border: `2px solid ${done ? '#10b981' : 'rgba(255,255,255,0.12)'}`,
+                  border: `2px solid ${done ? '#10b981' : t.brCD}`,
                   boxShadow: done ? '0 0 8px #10b98144' : 'none',
                   transition: 'all 0.18s ease',
                 }}>
@@ -685,23 +685,25 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
       </div>
 
       {/* ── Tab content ── */}
-      {activeTab === 'progress' && (
-        <ProgressTab
-          moduleData={moduleData}
-          qps={qps}
-          detail={detail}
-          subjectId={subjectId}
-          moduleId={moduleId}
-          color={color}
-          t={t}
-        />
-      )}
-      {activeTab === 'statistics' && (
-        <StatisticsTab moduleData={moduleData} t={t} />
-      )}
-      {activeTab === 'resources' && (
-        <ResourcesTab subject={subject} moduleId={moduleId} t={t} />
-      )}
+      <div key={activeTab} className="animate-fade-in">
+        {activeTab === 'progress' && (
+          <ProgressTab
+            moduleData={moduleData}
+            qps={qps}
+            detail={detail}
+            subjectId={subjectId}
+            moduleId={moduleId}
+            color={color}
+            t={t}
+          />
+        )}
+        {activeTab === 'statistics' && (
+          <StatisticsTab moduleData={moduleData} t={t} />
+        )}
+        {activeTab === 'resources' && (
+          <ResourcesTab subject={subject} moduleId={moduleId} t={t} />
+        )}
+      </div>
 
     </div>
   );
