@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { SUBJECTS } from '../data/subjects';
+import { ALL_SUBJECTS } from '../data/subjects';
 import { hasModuleDetail, CG_MODULE_DATA, CG_QPS } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
@@ -17,7 +17,7 @@ const STORAGE_KEY = 'examboard_progress';
 
 function defaultProgress() {
   const init = {};
-  SUBJECTS.forEach((s) => {
+  ALL_SUBJECTS.forEach((s) => {
     init[s.id] = { modules: {}, moduleDetail: {} };
     s.modules.forEach((m) => {
       init[s.id].modules[m.id] = false;
@@ -153,7 +153,7 @@ export function ProgressProvider({ children }) {
   };
 
   const getSubjectCompletion = (subjectId) => {
-    const subject = SUBJECTS.find((s) => s.id === subjectId);
+    const subject = ALL_SUBJECTS.find((s) => s.id === subjectId);
     if (!subject) return 0;
     let doneWeight = 0;
     subject.modules.forEach((m) => {

@@ -1,4 +1,5 @@
-import { SUBJECTS, getNextExam, getSubjectColor } from '../data/subjects';
+import { getNextExam, getSubjectColor, ELECTIVE_OPTIONS } from '../data/subjects';
+import { useElective } from '../context/ElectiveContext';
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -253,7 +254,8 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
 export default function Home({ onSelectSubject }) {
   const { t, mode } = useTheme();
   const isMobile = useIsMobile();
-  const nextExam = getNextExam();
+  const { activeSubjects, electiveKey, setElectiveKey } = useElective();
+  const nextExam = getNextExam(activeSubjects);
   const nextExamColor = nextExam ? getSubjectColor(nextExam, mode) : null;
   const { getSubjectCompletion } = useProgress();
   const now = new Date();
@@ -262,10 +264,10 @@ export default function Home({ onSelectSubject }) {
     ? Math.ceil((new Date(nextExam.examDate) - now) / 864e5)
     : 0;
   const totalPct  = Math.round(
-    SUBJECTS.reduce((acc, s) => acc + getSubjectCompletion(s.id), 0) / SUBJECTS.length
+    activeSubjects.reduce((acc, s) => acc + getSubjectCompletion(s.id), 0) / activeSubjects.length
   );
-  const remaining = SUBJECTS.filter(s => new Date(s.examDate) >= now).length;
-  const started   = SUBJECTS.filter(s => getSubjectCompletion(s.id) > 0).length;
+  const remaining = activeSubjects.filter(s => new Date(s.examDate) >= now).length;
+  const started   = activeSubjects.filter(s => getSubjectCompletion(s.id) > 0).length;
 
   return (
     <div style={{
@@ -273,12 +275,52 @@ export default function Home({ onSelectSubject }) {
       display: 'flex', flexDirection: 'column', gap: isMobile ? 20 : 28,
     }}>
 
+      {/* ── Elective switcher ── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+        padding: '11px 16px', borderRadius: 12,
+        background: t.card, border: `1px solid ${t.brC}`,
+      }}>
+        <span style={{
+          fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em',
+          color: t.t22, whiteSpace: 'nowrap',
+        }}>
+          Elective
+        </span>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {ELECTIVE_OPTIONS.map(opt => {
+            const active  = electiveKey === opt.key;
+            const col     = getSubjectColor(opt.subject, mode);
+            return (
+              <button
+                key={opt.key}
+                onClick={() => setElectiveKey(opt.key)}
+                style={{
+                  padding: '5px 14px', borderRadius: 7, cursor: 'pointer',
+                  fontSize: 12, fontWeight: 600,
+                  color:      active ? col        : t.t30,
+                  background: active ? `${col}14` : t.subtleBg,
+                  border: `1px solid ${active ? `${col}35` : t.brS}`,
+                  transition: 'all 0.15s',
+                  boxShadow: active ? `0 2px 10px ${col}20` : 'none',
+                }}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+        <span style={{ fontSize: 11, color: t.t18, marginLeft: 'auto' }}>
+          May 5 · 3 Credits
+        </span>
+      </div>
+
       {/* ── Stats row ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 10 }}>
         {[
           { icon: <Clock size={16} />, label: 'Next Exam In',      value: nextDays > 0 ? `${nextDays}d` : nextDays === 0 ? 'Today!' : '—', sub: nextExam ? nextExam.name : 'All done',      accent: '#6366F1' },
-          { icon: <TrendingUp size={16} />, label: 'Overall Progress', value: `${totalPct}%`,   sub: `${started} of 6 subjects started`,           accent: '#10B981' },
-          { icon: <Award size={16} />, label: 'Exams Remaining',   value: remaining,             sub: `${6 - remaining} completed`,                 accent: '#F59E0B' },
+          { icon: <TrendingUp size={16} />, label: 'Overall Progress', value: `${totalPct}%`,   sub: `${started} of ${activeSubjects.length} subjects started`, accent: '#10B981' },
+          { icon: <Award size={16} />, label: 'Exams Remaining',   value: remaining,             sub: `${activeSubjects.length - remaining} completed`,          accent: '#F59E0B' },
         ].map((card, i) => (
           <div key={card.label} className="animate-slide-up" style={{ animationDelay: `${i * 0.07}s` }}>
             <StatCard icon={card.icon} label={card.label} value={card.value} sub={card.sub} accent={card.accent} t={t} />
@@ -380,7 +422,7 @@ export default function Home({ onSelectSubject }) {
       <div>
         <SectionLabel label="Subject Progress" t={t} />
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
-          {SUBJECTS.map((s, i) => (
+          {activeSubjects.map((s, i) => (
             <div key={s.id} className="animate-slide-up" style={{ animationDelay: `${i * 0.06}s` }}>
               <SubjectCard subject={s} onSelect={onSelectSubject} t={t} />
             </div>
@@ -392,11 +434,11 @@ export default function Home({ onSelectSubject }) {
       <div>
         <SectionLabel label="Exam Schedule" t={t} />
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(6, 1fr)', gap: 10 }}>
-          {SUBJECTS.map((s, i) => {
+          {activeSubjects.map((s, i) => {
             const diffDays = Math.ceil((new Date(s.examDate) - now) / 864e5);
             const studyDays = i === 0
               ? Math.max(0, Math.ceil((new Date(s.examDate) - now) / 864e5))
-              : Math.ceil((new Date(s.examDate) - new Date(SUBJECTS[i - 1].examDate)) / 864e5);
+              : Math.ceil((new Date(s.examDate) - new Date(activeSubjects[i - 1].examDate)) / 864e5);
             return <TimelineItem key={s.id} subject={s} daysFromNow={diffDays} studyDays={studyDays} t={t} />;
           })}
         </div>

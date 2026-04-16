@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { SUBJECTS, getSubjectColor } from '../data/subjects';
+import { ALL_SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, getTopicPriority } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
@@ -707,7 +707,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
   const { getModuleDetail } = useProgress();
   const [activeTab, setActiveTab] = useState('progress');
 
-  const subject                = SUBJECTS.find(s => s.id === subjectId);
+  const subject                = ALL_SUBJECTS.find(s => s.id === subjectId);
   const { moduleData, qps }   = getSubjectData(subjectId, moduleId);
   const modMeta                = subject?.modules.find(m => m.id === moduleId);
   const detail     = getModuleDetail(subjectId, moduleId);

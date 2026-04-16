@@ -4,13 +4,15 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { SUBJECTS, getSubjectColor } from '../data/subjects';
+import { getSubjectColor } from '../data/subjects';
+import { useElective } from '../context/ElectiveContext';
 import { Sun, Moon } from 'lucide-react';
 
 export default function Login() {
   const { login, loginWithGoogle } = useAuth();
   const navigate     = useNavigate();
   const { t, mode, toggle } = useTheme();
+  const { activeSubjects } = useElective();
   const isMobile = useIsMobile();
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
@@ -141,7 +143,7 @@ export default function Login() {
           marginTop: 36,
           display: 'flex', flexDirection: 'column', gap: 8,
         }}>
-          {SUBJECTS.map((s) => {
+          {activeSubjects.map((s) => {
             const diffDays = Math.ceil((new Date(s.examDate) - new Date()) / 864e5);
             const sColor   = getSubjectColor(s, mode);
             return (

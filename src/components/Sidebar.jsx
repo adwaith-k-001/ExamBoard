@@ -1,7 +1,7 @@
 import { useProgress } from '../context/ProgressContext';
-import { SUBJECTS } from '../data/subjects';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useElective } from '../context/ElectiveContext';
 import { BookOpen, LayoutDashboard, LogOut } from 'lucide-react';
 import { getSubjectColor } from '../data/subjects';
 
@@ -170,6 +170,7 @@ export default function Sidebar({ activeSubject, onSelectSubject, isMobile, isOp
   const { t } = useTheme();
   const { getSubjectCompletion } = useProgress();
   const { logout } = useAuth();
+  const { activeSubjects } = useElective();
   const now = new Date();
 
   const mobileStyle = isMobile ? {
@@ -247,7 +248,7 @@ export default function Sidebar({ activeSubject, onSelectSubject, isMobile, isOp
             Subjects
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {SUBJECTS.map((s) => {
+            {activeSubjects.map((s) => {
               const pct      = getSubjectCompletion(s.id);
               const diffMs   = new Date(s.examDate) - now;
               const diffDays = Math.ceil(diffMs / 864e5);

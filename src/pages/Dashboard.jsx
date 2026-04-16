@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar';
 import Home from './Home';
 import SubjectPage from './SubjectPage';
 import ModuleDetailPage from './ModuleDetailPage';
-import { SUBJECTS } from '../data/subjects';
+import { ALL_SUBJECTS } from '../data/subjects';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { ChevronRight, Calendar, Sun, Moon, Menu } from 'lucide-react';
@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [activeModule,  setActiveModule]  = useState(null);
   const [sidebarOpen,   setSidebarOpen]   = useState(false);
 
-  const subject = activeSubject ? SUBJECTS.find((s) => s.id === activeSubject) : null;
+  const subject = activeSubject ? ALL_SUBJECTS.find((s) => s.id === activeSubject) : null;
   const modMeta = (subject && activeModule != null)
     ? subject.modules.find(m => m.id === activeModule)
     : null;

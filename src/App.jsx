@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProgressProvider } from './context/ProgressContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ElectiveProvider } from './context/ElectiveContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
@@ -47,9 +48,11 @@ export default function App() {
       <ThemeProvider>
         <BrowserRouter>
           <AuthProvider>
-            <ProgressProvider>
-              <AppRoutes />
-            </ProgressProvider>
+            <ElectiveProvider>
+              <ProgressProvider>
+                <AppRoutes />
+              </ProgressProvider>
+            </ElectiveProvider>
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>

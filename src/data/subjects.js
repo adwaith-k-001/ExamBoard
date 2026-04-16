@@ -1,4 +1,5 @@
-export const SUBJECTS = [
+/* ─── Non-elective subjects (always present) ─── */
+const BASE_SUBJECTS = [
   {
     id: 'CST302',
     code: 'CST302',
@@ -75,23 +76,6 @@ export const SUBJECTS = [
     ],
   },
   {
-    id: 'CST362',
-    code: 'CST362',
-    name: 'Python Programming',
-    shortName: 'Python',
-    examDate: '2026-05-05',
-    credits: 3,
-    priority: 'MEDIUM',
-    color: '#f59e0b', lightColor: '#B45309',
-    modules: [
-      { id: 1, name: 'Python Basics & Data Types' },
-      { id: 2, name: 'Control Flow & Functions' },
-      { id: 3, name: 'OOP in Python' },
-      { id: 4, name: 'File Handling & Exceptions' },
-      { id: 5, name: 'Libraries & Applications' },
-    ],
-  },
-  {
     id: 'HUT300',
     code: 'HUT300',
     name: 'Internet of Everything',
@@ -127,6 +111,71 @@ export const SUBJECTS = [
   },
 ];
 
+/* ─── Elective options (same exam slot, same date) ─── */
+const PYTHON_SUBJECT = {
+  id: 'CST362',
+  code: 'CST362',
+  name: 'Python Programming',
+  shortName: 'Python',
+  examDate: '2026-05-05',
+  credits: 3,
+  priority: 'MEDIUM',
+  color: '#f59e0b', lightColor: '#B45309',
+  elective: true,
+  modules: [
+    { id: 1, name: 'Python Basics & Data Types' },
+    { id: 2, name: 'Control Flow & Functions' },
+    { id: 3, name: 'OOP in Python' },
+    { id: 4, name: 'File Handling & Exceptions' },
+    { id: 5, name: 'Libraries & Applications' },
+  ],
+};
+
+const DA_SUBJECT = {
+  id: 'CST362DA',
+  code: 'CST362',
+  name: 'Data Analytics',
+  shortName: 'DA',
+  examDate: '2026-05-05',
+  credits: 3,
+  priority: 'MEDIUM',
+  color: '#F97316', lightColor: '#C2410C',
+  elective: true,
+  modules: [
+    { id: 1, name: 'Introduction to Data Analytics' },
+    { id: 2, name: 'Data Preprocessing & Exploratory Analysis' },
+    { id: 3, name: 'Statistical Learning & Regression' },
+    { id: 4, name: 'Classification, Clustering & Association' },
+    { id: 5, name: 'Data Visualization & Business Intelligence' },
+  ],
+};
+
+/* ─── Elective registry ─── */
+export const ELECTIVE_OPTIONS = [
+  { key: 'python', label: 'Python Programming', subject: PYTHON_SUBJECT },
+  { key: 'da',     label: 'Data Analytics',     subject: DA_SUBJECT     },
+];
+
+/** All subjects including both elective variants — use for .find() lookups. */
+export const ALL_SUBJECTS = [...BASE_SUBJECTS, PYTHON_SUBJECT, DA_SUBJECT];
+
+/** Active 6-subject list with chosen elective. Defaults to Python. */
+export function getActiveSubjects(electiveKey = 'python') {
+  const elective = ELECTIVE_OPTIONS.find(o => o.key === electiveKey)?.subject ?? PYTHON_SUBJECT;
+  // Insert elective after AAD (index 3), before HUT300
+  return [
+    BASE_SUBJECTS[0], // CST302
+    BASE_SUBJECTS[1], // CST304
+    BASE_SUBJECTS[2], // CST306
+    elective,
+    BASE_SUBJECTS[3], // HUT300
+    BASE_SUBJECTS[4], // CST308
+  ];
+}
+
+/** Legacy default — Python elective. Import getActiveSubjects for dynamic use. */
+export const SUBJECTS = getActiveSubjects('python');
+
 export const EXAM_SCHEDULE = SUBJECTS.map((s) => ({
   code: s.code,
   name: s.name,
@@ -138,10 +187,9 @@ export function getSubjectColor(subject, mode) {
   return mode === 'light' ? (subject.lightColor || subject.color) : subject.color;
 }
 
-export function getNextExam() {
+export function getNextExam(subjects = SUBJECTS) {
   const now = new Date();
-  const upcoming = SUBJECTS.filter((s) => new Date(s.examDate) >= now).sort(
-    (a, b) => new Date(a.examDate) - new Date(b.examDate)
-  );
-  return upcoming[0] || null;
+  return subjects
+    .filter((s) => new Date(s.examDate) >= now)
+    .sort((a, b) => new Date(a.examDate) - new Date(b.examDate))[0] || null;
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SUBJECTS, getSubjectColor } from '../data/subjects';
+import { ALL_SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, hasModuleDetail } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
@@ -229,7 +229,7 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
 export default function SubjectPage({ subjectId, onOpenModule }) {
   const { t, mode } = useTheme();
   const isMobile = useIsMobile();
-  const subject = SUBJECTS.find(s => s.id === subjectId);
+  const subject = ALL_SUBJECTS.find(s => s.id === subjectId);
   const { progress, toggleModule, getSubjectCompletion } = useProgress();
   const [pdfModalKey, setPdfModalKey] = useState(null); // 'syllabus' | 'pyq'
 
