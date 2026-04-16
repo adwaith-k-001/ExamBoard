@@ -78,7 +78,7 @@ const BASE_SUBJECTS = [
   {
     id: 'HUT300',
     code: 'HUT300',
-    name: 'Internet of Everything',
+    name: 'Industrial Economics & Foreign Trade',
     shortName: 'IEFT',
     examDate: '2026-05-08',
     credits: 3,
@@ -95,7 +95,7 @@ const BASE_SUBJECTS = [
   {
     id: 'CST308',
     code: 'CST308',
-    name: 'Cloud Computing',
+    name: 'Comprehensive Course Work',
     shortName: 'CCW',
     examDate: '2026-05-12',
     credits: 3,
