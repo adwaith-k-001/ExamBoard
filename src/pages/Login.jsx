@@ -4,7 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { SUBJECTS } from '../data/subjects';
+import { SUBJECTS, getSubjectColor } from '../data/subjects';
 import { Sun, Moon } from 'lucide-react';
 
 export default function Login() {
@@ -143,6 +143,7 @@ export default function Login() {
         }}>
           {SUBJECTS.map((s) => {
             const diffDays = Math.ceil((new Date(s.examDate) - new Date()) / 864e5);
+            const sColor   = getSubjectColor(s, mode);
             return (
               <div key={s.id} style={{
                 display: 'flex', alignItems: 'center', gap: 11,
@@ -152,17 +153,17 @@ export default function Login() {
               }}>
                 <div style={{
                   width: 7, height: 7, borderRadius: '50%',
-                  background: s.color, flexShrink: 0,
-                  boxShadow: `0 0 7px ${s.color}70`,
+                  background: sColor, flexShrink: 0,
+                  boxShadow: `0 0 7px ${sColor}70`,
                 }} />
                 <span style={{ fontSize: 13, color: t.t50, flex: 1 }}>
                   {s.name}
                 </span>
                 <span style={{
                   fontSize: 11, fontWeight: 600,
-                  color: diffDays > 0 ? s.color : t.t22,
-                  background: diffDays > 0 ? `${s.color}12` : t.subtleBg,
-                  border: `1px solid ${diffDays > 0 ? `${s.color}25` : t.brS}`,
+                  color: diffDays > 0 ? sColor : t.t22,
+                  background: diffDays > 0 ? `${sColor}12` : t.subtleBg,
+                  border: `1px solid ${diffDays > 0 ? `${sColor}25` : t.brS}`,
                   padding: '2px 8px', borderRadius: 5,
                   whiteSpace: 'nowrap',
                 }}>

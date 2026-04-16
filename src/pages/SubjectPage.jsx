@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SUBJECTS } from '../data/subjects';
+import { SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, hasModuleDetail } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
@@ -222,7 +222,7 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
    Subject page
 ════════════════════════════════════════ */
 export default function SubjectPage({ subjectId, onOpenModule }) {
-  const { t } = useTheme();
+  const { t, mode } = useTheme();
   const isMobile = useIsMobile();
   const subject = SUBJECTS.find(s => s.id === subjectId);
   const { progress, toggleModule, getSubjectCompletion } = useProgress();
@@ -230,6 +230,7 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
 
   if (!subject) return null;
 
+  const color = getSubjectColor(subject, mode);
   const pct       = getSubjectCompletion(subject.id);
   const modules   = progress[subject.id]?.modules || {};
   const doneCount = subject.modules.filter(m => modules[m.id]).length;
@@ -249,17 +250,17 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
       <div style={{
         padding: isMobile ? '20px 18px' : '28px 32px', borderRadius: 16,
         background: t.hero,
-        border: `1px solid ${subject.color}1E`,
+        border: `1px solid ${color}1E`,
         position: 'relative', overflow: 'hidden',
         boxShadow: `0 1px 0 ${t.brS}`,
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: `linear-gradient(90deg, transparent 5%, ${subject.color}55 40%, ${subject.color}55 60%, transparent 95%)`,
+          background: `linear-gradient(90deg, transparent 5%, ${color}55 40%, ${color}55 60%, transparent 95%)`,
         }} />
         <div style={{
           position: 'absolute', top: 0, right: 0, width: 200, height: 200,
-          background: `radial-gradient(circle at 90% 10%, ${subject.color}0D, transparent 65%)`,
+          background: `radial-gradient(circle at 90% 10%, ${color}0D, transparent 65%)`,
           pointerEvents: 'none',
         }} />
 
@@ -277,8 +278,8 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
               <span style={{
                 padding: '4px 10px', borderRadius: 6,
                 fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em',
-                color: subject.color, background: `${subject.color}18`,
-                border: `1px solid ${subject.color}28`,
+                color: color, background: `${color}18`,
+                border: `1px solid ${color}28`,
               }}>
                 {subject.code}
               </span>
@@ -320,15 +321,15 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
                 <span style={{ color: t.t25 }}>
                   {doneCount} of {subject.modules.length} modules complete
                 </span>
-                <span style={{ fontWeight: 600, color: pct > 0 ? subject.color : t.t22 }}>
+                <span style={{ fontWeight: 600, color: pct > 0 ? color : t.t22 }}>
                   {pct}%
                 </span>
               </div>
               <div style={{ height: 3, borderRadius: 4, background: t.subtleBg, overflow: 'hidden' }}>
                 <div style={{
                   height: '100%', borderRadius: 4, width: `${pct}%`,
-                  background: `linear-gradient(90deg, ${subject.color}80, ${subject.color})`,
-                  boxShadow: pct > 0 ? `0 0 10px ${subject.color}50` : 'none',
+                  background: `linear-gradient(90deg, ${color}80, ${color})`,
+                  boxShadow: pct > 0 ? `0 0 10px ${color}50` : 'none',
                   transition: 'width 0.7s cubic-bezier(0.4,0,0.2,1)',
                 }} />
               </div>
@@ -342,12 +343,12 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
             }}>
               <p style={{
                 fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
-                letterSpacing: '0.18em', color: `${subject.color}65`,
+                letterSpacing: '0.18em', color: `${color}65`,
                 textAlign: 'center', marginBottom: 12,
               }}>
                 Time Left
               </p>
-              <Countdown targetDate={subject.examDate} color={subject.color} compact />
+              <Countdown targetDate={subject.examDate} color={color} compact />
             </div>
           )}
         </div>
@@ -367,7 +368,7 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
                   key={mod.id}
                   mod={mod}
                   subjectId={subject.id}
-                  color={subject.color}
+                  color={color}
                   isLastOdd={isLastOdd}
                   onOpen={() => onOpenModule?.(mod.id)}
                   t={t}
@@ -381,7 +382,7 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
                 key={mod.id}
                 mod={mod}
                 done={done}
-                color={subject.color}
+                color={color}
                 isLastOdd={isLastOdd}
                 onToggle={() => toggleModule(subject.id, mod.id)}
                 t={t}
@@ -431,14 +432,14 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
             const badge = count > 0 ? `${count} file${count !== 1 ? 's' : ''} →` : 'Open →';
             const inner = (
               <>
-                <div style={{ color: subject.color, marginBottom: 12 }}>{r.icon}</div>
+                <div style={{ color: color, marginBottom: 12 }}>{r.icon}</div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: t.t1, marginBottom: 5 }}>{r.label}</p>
                 <p style={{ fontSize: 12, color: t.t33, lineHeight: 1.55, flex: 1 }}>{r.desc}</p>
                 <div style={{
                   marginTop: 14, padding: '3px 8px', borderRadius: 5,
                   display: 'inline-flex', alignSelf: 'flex-start',
                   fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em',
-                  color: subject.color, background: `${subject.color}12`, border: `1px solid ${subject.color}28`,
+                  color: color, background: `${color}12`, border: `1px solid ${color}28`,
                 }}>
                   {badge}
                 </div>
@@ -450,15 +451,15 @@ export default function SubjectPage({ subjectId, onOpenModule }) {
                 onClick={() => setPdfModalKey(r.key)}
                 style={{
                   ...cardBase, textAlign: 'left', cursor: 'pointer',
-                  background: t.resBg, border: `1px solid ${subject.color}28`,
+                  background: t.resBg, border: `1px solid ${color}28`,
                   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = `${subject.color}55`;
-                  e.currentTarget.style.boxShadow = `0 0 0 3px ${subject.color}12`;
+                  e.currentTarget.style.borderColor = `${color}55`;
+                  e.currentTarget.style.boxShadow = `0 0 0 3px ${color}12`;
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = `${subject.color}28`;
+                  e.currentTarget.style.borderColor = `${color}28`;
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >

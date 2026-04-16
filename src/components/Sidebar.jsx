@@ -3,6 +3,7 @@ import { SUBJECTS } from '../data/subjects';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { BookOpen, LayoutDashboard, LogOut } from 'lucide-react';
+import { getSubjectColor } from '../data/subjects';
 
 /* ── SVG progress ring ── */
 function CircleProgress({ pct, color, size = 34, track }) {
@@ -77,6 +78,8 @@ function NavItem({ isActive, onClick, icon, label, t }) {
 
 /* ── Subject nav item ── */
 function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
+  const { mode } = useTheme();
+  const color    = getSubjectColor(subject, mode);
   return (
     <button
       onClick={onClick}
@@ -87,7 +90,7 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
         gap: 10,
         padding: '9px 10px',
         borderRadius: 8,
-        background: isActive ? `${subject.color}0F` : 'transparent',
+        background: isActive ? `${color}0F` : 'transparent',
         color: isActive ? t.t1 : t.navInactive,
         border: 'none',
         cursor: 'pointer',
@@ -113,7 +116,7 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
           position: 'absolute',
           left: 0, top: '50%', transform: 'translateY(-50%)',
           width: 3, height: 18, borderRadius: '0 2px 2px 0',
-          background: subject.color,
+          background: color,
         }} />
       )}
 
@@ -121,14 +124,14 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
       <div style={{ position: 'relative', flexShrink: 0 }}>
         <CircleProgress
           pct={pct}
-          color={isActive ? subject.color : `${subject.color}55`}
+          color={isActive ? color : `${color}55`}
           track={t.ring}
         />
         <span style={{
           position: 'absolute', inset: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 7.5, fontWeight: 700, letterSpacing: '-0.02em',
-          color: isActive ? subject.color : `${subject.color}70`,
+          color: isActive ? color : `${color}70`,
         }}>
           {pct}
         </span>
@@ -153,8 +156,8 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
       {!isPast && diffDays <= 5 && (
         <div style={{
           width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-          background: subject.color,
-          boxShadow: `0 0 7px ${subject.color}`,
+          background: color,
+          boxShadow: `0 0 7px ${color}`,
           animation: diffDays <= 2 ? 'dot-pulse 2s ease-in-out infinite' : 'none',
         }} />
       )}

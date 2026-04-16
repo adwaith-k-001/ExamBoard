@@ -7,7 +7,7 @@ export const SUBJECTS = [
     examDate: '2026-04-24',
     credits: 4,
     priority: 'HIGH',
-    color: '#6366f1',
+    color: '#6366f1', lightColor: '#3730A3',
     modules: [
       { id: 1, name: 'Introduction to Compilers & Lexical Analysis' },
       { id: 2, name: 'Syntax Analysis' },
@@ -24,7 +24,7 @@ export const SUBJECTS = [
     examDate: '2026-04-28',
     credits: 4,
     priority: 'HIGH',
-    color: '#8b5cf6',
+    color: '#8b5cf6', lightColor: '#5B21B6',
     links: {
       notesFolder:    'https://drive.google.com/drive/folders/1uFOE3CZPKGCPMxD5gcSPEG3vt81skONM?usp=sharing',
       notes: [
@@ -65,7 +65,7 @@ export const SUBJECTS = [
     examDate: '2026-05-02',
     credits: 4,
     priority: 'HIGH',
-    color: '#ec4899',
+    color: '#ec4899', lightColor: '#9D174D',
     modules: [
       { id: 1, name: 'Introduction to Algorithm Analysis' },
       { id: 2, name: 'Advanced Data Structures and Graph Algorithms' },
@@ -82,7 +82,7 @@ export const SUBJECTS = [
     examDate: '2026-05-05',
     credits: 3,
     priority: 'MEDIUM',
-    color: '#f59e0b',
+    color: '#f59e0b', lightColor: '#B45309',
     modules: [
       { id: 1, name: 'Python Basics & Data Types' },
       { id: 2, name: 'Control Flow & Functions' },
@@ -99,7 +99,7 @@ export const SUBJECTS = [
     examDate: '2026-05-08',
     credits: 3,
     priority: 'MEDIUM',
-    color: '#10b981',
+    color: '#10b981', lightColor: '#047857',
     modules: [
       { id: 1, name: 'Introduction to IoT & IoE' },
       { id: 2, name: 'IoT Architecture & Protocols' },
@@ -116,7 +116,7 @@ export const SUBJECTS = [
     examDate: '2026-05-12',
     credits: 3,
     priority: 'MEDIUM',
-    color: '#06b6d4',
+    color: '#06b6d4', lightColor: '#0E7490',
     modules: [
       { id: 1, name: 'Introduction to Cloud Computing' },
       { id: 2, name: 'Cloud Architecture & Service Models' },
@@ -132,6 +132,11 @@ export const EXAM_SCHEDULE = SUBJECTS.map((s) => ({
   name: s.name,
   date: s.examDate,
 }));
+
+/** Returns the accent color appropriate for the current theme mode. */
+export function getSubjectColor(subject, mode) {
+  return mode === 'light' ? (subject.lightColor || subject.color) : subject.color;
+}
 
 export function getNextExam() {
   const now = new Date();

@@ -1,4 +1,4 @@
-import { SUBJECTS, getNextExam } from '../data/subjects';
+import { SUBJECTS, getNextExam, getSubjectColor } from '../data/subjects';
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -59,7 +59,9 @@ function StatCard({ icon, label, value, sub, accent, t }) {
 
 /* ── Subject card ── */
 function SubjectCard({ subject, onSelect, t }) {
+  const { mode } = useTheme();
   const { getSubjectCompletion } = useProgress();
+  const color    = getSubjectColor(subject, mode);
   const pct      = getSubjectCompletion(subject.id);
   const diffDays = Math.ceil((new Date(subject.examDate) - new Date()) / 864e5);
   const isPast   = diffDays < 0;
@@ -75,8 +77,8 @@ function SubjectCard({ subject, onSelect, t }) {
         transition: 'transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = `${subject.color}35`;
-        e.currentTarget.style.boxShadow   = `0 8px 32px ${subject.color}0C, 0 2px 8px rgba(0,0,0,0.06)`;
+        e.currentTarget.style.borderColor = `${color}35`;
+        e.currentTarget.style.boxShadow   = `0 8px 32px ${color}0C, 0 2px 8px rgba(0,0,0,0.06)`;
         e.currentTarget.style.transform   = 'translateY(-2px)';
       }}
       onMouseLeave={e => {
@@ -88,12 +90,12 @@ function SubjectCard({ subject, onSelect, t }) {
       {/* Colour stripe */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, ${subject.color}90, ${subject.color}18, transparent)`,
+        background: `linear-gradient(90deg, ${color}90, ${color}18, transparent)`,
       }} />
       {/* Ambient inner glow */}
       <div style={{
         position: 'absolute', top: 0, right: 0, width: 110, height: 110,
-        background: `radial-gradient(circle at 90% 10%, ${subject.color}09, transparent 70%)`,
+        background: `radial-gradient(circle at 90% 10%, ${color}09, transparent 70%)`,
         pointerEvents: 'none',
       }} />
 
@@ -105,9 +107,9 @@ function SubjectCard({ subject, onSelect, t }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
           <div style={{
             width: 42, height: 42, borderRadius: 10,
-            background: `${subject.color}14`, border: `1px solid ${subject.color}22`,
+            background: `${color}14`, border: `1px solid ${color}22`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 12, fontWeight: 700, color: subject.color, flexShrink: 0,
+            fontSize: 12, fontWeight: 700, color: color, flexShrink: 0,
             letterSpacing: '-0.02em',
           }}>
             {subject.shortName.slice(0, 2).toUpperCase()}
@@ -124,9 +126,9 @@ function SubjectCard({ subject, onSelect, t }) {
         <div style={{
           padding: '3px 8px', borderRadius: 6, flexShrink: 0,
           fontSize: 11, fontWeight: 600,
-          background: isPast ? t.subtleBg : `${subject.color}14`,
-          color: isPast ? t.t20 : subject.color,
-          border: `1px solid ${isPast ? t.brS : `${subject.color}25`}`,
+          background: isPast ? t.subtleBg : `${color}14`,
+          color: isPast ? t.t20 : color,
+          border: `1px solid ${isPast ? t.brS : `${color}25`}`,
         }}>
           {isPast ? 'Done' : diffDays === 0 ? 'Today' : `${diffDays}d`}
         </div>
@@ -141,13 +143,13 @@ function SubjectCard({ subject, onSelect, t }) {
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7, fontSize: 11 }}>
           <span style={{ color: t.t20 }}>{subject.modules.length} modules</span>
-          <span style={{ fontWeight: 600, color: pct > 0 ? subject.color : t.t20 }}>{pct}%</span>
+          <span style={{ fontWeight: 600, color: pct > 0 ? color : t.t20 }}>{pct}%</span>
         </div>
         <div style={{ height: 3, borderRadius: 4, background: t.subtleBg, overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 4, width: `${pct}%`,
-            background: `linear-gradient(90deg, ${subject.color}80, ${subject.color})`,
-            boxShadow: pct > 0 ? `0 0 8px ${subject.color}50` : 'none',
+            background: `linear-gradient(90deg, ${color}80, ${color})`,
+            boxShadow: pct > 0 ? `0 0 8px ${color}50` : 'none',
             transition: 'width 0.7s cubic-bezier(0.4,0,0.2,1)',
           }} />
         </div>
@@ -168,7 +170,9 @@ function SubjectCard({ subject, onSelect, t }) {
 
 /* ── Timeline item ── */
 function TimelineItem({ subject, daysFromNow, studyDays, t }) {
-  const isPast  = daysFromNow < 0;
+  const { mode } = useTheme();
+  const color    = getSubjectColor(subject, mode);
+  const isPast   = daysFromNow < 0;
   const isNext  = daysFromNow >= 0 && daysFromNow <= 1;
   const date    = new Date(subject.examDate);
   const dateStr = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
@@ -177,8 +181,8 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
   return (
     <div style={{
       padding: '13px 14px', borderRadius: 10,
-      background: isNext ? `${subject.color}08` : t.schBg,
-      border: `1px solid ${isNext ? `${subject.color}28` : t.schBr}`,
+      background: isNext ? `${color}08` : t.schBg,
+      border: `1px solid ${isNext ? `${color}28` : t.schBr}`,
       opacity: isPast ? 0.35 : 1,
       display: 'flex', flexDirection: 'column', gap: 8,
       position: 'relative', overflow: 'hidden',
@@ -186,19 +190,19 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
       {isNext && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: `linear-gradient(90deg, transparent, ${subject.color}60, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${color}60, transparent)`,
         }} />
       )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         <div style={{
           width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
-          background: isPast ? t.t12 : subject.color,
-          boxShadow: isNext ? `0 0 8px ${subject.color}` : 'none',
+          background: isPast ? t.t12 : color,
+          boxShadow: isNext ? `0 0 8px ${color}` : 'none',
         }} />
         <span style={{
           fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em',
-          color: isNext ? subject.color : t.t22,
+          color: isNext ? color : t.t22,
         }}>
           {subject.code}
         </span>
@@ -214,7 +218,7 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
       <div>
         <p style={{
           fontSize: 13, fontWeight: 600,
-          color: isNext ? subject.color : t.t30,
+          color: isNext ? color : t.t30,
         }}>
           {dateStr}
         </p>
@@ -226,14 +230,14 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
       {/* Study window */}
       {studyDays != null && (
         <div style={{
-          borderTop: `1px solid ${isNext ? `${subject.color}18` : t.schBr}`,
+          borderTop: `1px solid ${isNext ? `${color}18` : t.schBr}`,
           paddingTop: 7, marginTop: 1,
           display: 'flex', alignItems: 'center', gap: 5,
         }}>
           <span style={{ fontSize: 9, lineHeight: 1 }}>⏱</span>
           <span style={{
             fontSize: 10, fontWeight: 600,
-            color: isNext ? subject.color : t.t25,
+            color: isNext ? color : t.t25,
           }}>
             {studyDays}d to prep
           </span>
@@ -247,9 +251,10 @@ function TimelineItem({ subject, daysFromNow, studyDays, t }) {
    Home page
 ════════════════════════════════════════ */
 export default function Home({ onSelectSubject }) {
-  const { t } = useTheme();
+  const { t, mode } = useTheme();
   const isMobile = useIsMobile();
   const nextExam = getNextExam();
+  const nextExamColor = nextExam ? getSubjectColor(nextExam, mode) : null;
   const { getSubjectCompletion } = useProgress();
   const now = new Date();
 
@@ -287,19 +292,19 @@ export default function Home({ onSelectSubject }) {
         <div style={{
           padding: '28px 32px', borderRadius: 16,
           background: t.hero,
-          border: `1px solid ${nextExam.color}1E`,
+          border: `1px solid ${nextExamColor}1E`,
           position: 'relative', overflow: 'hidden',
           boxShadow: `0 1px 0 ${t.brS}`,
         }}>
           {/* Top glow line */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-            background: `linear-gradient(90deg, transparent 5%, ${nextExam.color}55 50%, transparent 95%)`,
+            background: `linear-gradient(90deg, transparent 5%, ${nextExamColor}55 50%, transparent 95%)`,
           }} />
           {/* Ambient radial */}
           <div style={{
             position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: `radial-gradient(ellipse 55% 120% at 85% 50%, ${nextExam.color}0A, transparent)`,
+            background: `radial-gradient(ellipse 55% 120% at 85% 50%, ${nextExamColor}0A, transparent)`,
           }} />
 
           <div style={{
@@ -314,11 +319,11 @@ export default function Home({ onSelectSubject }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                 <div className="animate-dot-pulse" style={{
                   width: 7, height: 7, borderRadius: '50%',
-                  background: nextExam.color, boxShadow: `0 0 9px ${nextExam.color}`,
+                  background: nextExamColor, boxShadow: `0 0 9px ${nextExamColor}`,
                 }} />
                 <span style={{
                   fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
-                  letterSpacing: '0.2em', color: `${nextExam.color}80`,
+                  letterSpacing: '0.2em', color: `${nextExamColor}80`,
                 }}>
                   Up Next
                 </span>
@@ -340,7 +345,7 @@ export default function Home({ onSelectSubject }) {
               {/* Badge row */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 {[
-                  { label: nextExam.code, color: nextExam.color, bg: `${nextExam.color}14`, border: `${nextExam.color}25` },
+                  { label: nextExam.code, color: nextExamColor, bg: `${nextExamColor}14`, border: `${nextExamColor}25` },
                   { label: '↑ High Priority', color: '#F97316', bg: 'rgba(249,115,22,0.1)', border: 'rgba(249,115,22,0.2)' },
                   { label: '4 Credits', color: t.t28, bg: t.subtleBg, border: t.brS },
                 ].map(b => (
@@ -358,12 +363,12 @@ export default function Home({ onSelectSubject }) {
             {/* Right countdown */}
             {!isMobile && (
               <div style={{ flexShrink: 0 }}>
-                <Countdown targetDate={nextExam.examDate} color={nextExam.color} />
+                <Countdown targetDate={nextExam.examDate} color={nextExamColor} />
               </div>
             )}
             {isMobile && (
               <div style={{ alignSelf: 'center' }}>
-                <Countdown targetDate={nextExam.examDate} color={nextExam.color} compact />
+                <Countdown targetDate={nextExam.examDate} color={nextExamColor} compact />
               </div>
             )}
           </div>

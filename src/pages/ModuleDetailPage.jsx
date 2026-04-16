@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SUBJECTS } from '../data/subjects';
+import { SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, getTopicPriority } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
@@ -460,7 +460,7 @@ function StatisticsTab({ moduleData, t }) {
 /* ═══════════════════════════════
    Resources Tab
 ═══════════════════════════════ */
-function ResourcesTab({ subject, moduleId, t }) {
+function ResourcesTab({ subject, moduleId, color, t }) {
   const [videoModal, setVideoModal] = useState(false);
   const [pdfModal,   setPdfModal]   = useState(false);
 
@@ -489,17 +489,17 @@ function ResourcesTab({ subject, moduleId, t }) {
         {hasNotes ? (
           <button
             onClick={() => setPdfModal(true)}
-            style={cardStyle(subject.color, false)}
+            style={cardStyle(color, false)}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = `${subject.color}45`;
-              e.currentTarget.style.boxShadow = `0 0 0 3px ${subject.color}10`;
+              e.currentTarget.style.borderColor = `${color}45`;
+              e.currentTarget.style.boxShadow = `0 0 0 3px ${color}10`;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.borderColor = t.brC;
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            <div style={{ color: subject.color, marginBottom: 10 }}><FileText size={18} /></div>
+            <div style={{ color: color, marginBottom: 10 }}><FileText size={18} /></div>
             <p style={{ fontSize: 13, fontWeight: 600, color: t.t1, marginBottom: 4 }}>
               Module {moduleId} Notes
             </p>
@@ -526,17 +526,17 @@ function ResourcesTab({ subject, moduleId, t }) {
         {hasVideos ? (
           <button
             onClick={() => setVideoModal(true)}
-            style={cardStyle(subject.color, false)}
+            style={cardStyle(color, false)}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = `${subject.color}45`;
-              e.currentTarget.style.boxShadow = `0 0 0 3px ${subject.color}10`;
+              e.currentTarget.style.borderColor = `${color}45`;
+              e.currentTarget.style.boxShadow = `0 0 0 3px ${color}10`;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.borderColor = t.brC;
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            <div style={{ color: subject.color, marginBottom: 10 }}><Play size={18} /></div>
+            <div style={{ color: color, marginBottom: 10 }}><Play size={18} /></div>
             <p style={{ fontSize: 13, fontWeight: 600, color: t.t1, marginBottom: 4 }}>
               {subject.name} — Lecture Series
             </p>
@@ -593,7 +593,7 @@ function SectionLabel({ label, t }) {
    Main Page
 ═══════════════════════════════ */
 export default function ModuleDetailPage({ subjectId, moduleId }) {
-  const { t }        = useTheme();
+  const { t, mode }  = useTheme();
   const { getModuleDetail } = useProgress();
   const [activeTab, setActiveTab] = useState('progress');
 
@@ -604,7 +604,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
 
   if (!subject || !moduleData || !modMeta) return null;
 
-  const color = subject.color;
+  const color = getSubjectColor(subject, mode);
 
   return (
     <div style={{
@@ -701,7 +701,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
           <StatisticsTab moduleData={moduleData} t={t} />
         )}
         {activeTab === 'resources' && (
-          <ResourcesTab subject={subject} moduleId={moduleId} t={t} />
+          <ResourcesTab subject={subject} moduleId={moduleId} color={color} t={t} />
         )}
       </div>
 
