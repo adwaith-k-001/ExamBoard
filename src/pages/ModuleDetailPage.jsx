@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, getTopicPriority } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
@@ -78,19 +78,163 @@ function CheckBox({ done, onClick, color, t }) {
 /* ═══════════════════════════════
    Progress Tab
 ═══════════════════════════════ */
+/* ── Per-QP accordion section ── */
+function QPSection({ qp, questions, detail, subjectId, moduleId, color, t }) {
+  const { toggleQPQuestion, bulkToggleQP } = useProgress();
+  const [open, setOpen] = useState(true);
+  const doneCnt = questions.filter(q => detail.qp?.[q.id]).length;
+  const allDone = doneCnt === questions.length;
+
+  return (
+    <div style={{
+      borderRadius: 10,
+      border: `1px solid ${allDone ? '#10b98130' : t.brC}`,
+      overflow: 'hidden',
+      background: allDone ? '#10b98108' : t.card,
+      transition: 'background 0.15s, border-color 0.15s',
+    }}>
+      {/* Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '11px 14px', cursor: 'pointer',
+        borderBottom: open ? `1px solid ${t.divider}` : 'none',
+      }}
+        onClick={() => setOpen(o => !o)}
+      >
+        {/* Expand chevron */}
+        <span style={{
+          fontSize: 10, color: t.t22, flexShrink: 0,
+          transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
+          transition: 'transform 0.18s',
+          display: 'inline-block',
+        }}>▶</span>
+
+        <span style={{ fontSize: 13, fontWeight: 700, color: allDone ? '#10b981' : t.t1b, flex: 1 }}>
+          {qp.label}
+        </span>
+
+        {/* Progress fraction */}
+        <span style={{
+          fontSize: 11, fontWeight: 600,
+          color: allDone ? '#10b981' : t.t25,
+          background: allDone ? '#10b98112' : t.subtleBg,
+          border: `1px solid ${allDone ? '#10b98125' : t.brS}`,
+          padding: '2px 8px', borderRadius: 5,
+          flexShrink: 0,
+        }}>
+          {doneCnt}/{questions.length}
+        </span>
+
+        {/* Bulk toggle — stop propagation so it doesn't also collapse */}
+        <button
+          onClick={e => { e.stopPropagation(); bulkToggleQP(subjectId, moduleId, questions); }}
+          style={{
+            padding: '3px 8px', borderRadius: 5, fontSize: 10, fontWeight: 700,
+            cursor: 'pointer', flexShrink: 0,
+            color: allDone ? '#10b981' : t.t25,
+            background: allDone ? '#10b98112' : t.subtleBg,
+            border: `1px solid ${allDone ? '#10b98125' : t.brS}`,
+            transition: 'all 0.12s',
+          }}
+        >
+          {allDone ? 'Uncheck all' : 'Check all'}
+        </button>
+      </div>
+
+      {/* Question list */}
+      {open && (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {questions.map((q, idx) => {
+            const done   = !!detail.qp?.[q.id];
+            const isPartB = q.qNum.toLowerCase().includes('part b') || q.qNum.includes('(B)');
+            return (
+              <button
+                key={q.id}
+                onClick={() => toggleQPQuestion(subjectId, moduleId, q.id)}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 10,
+                  padding: '10px 14px',
+                  borderTop: idx > 0 ? `1px solid ${t.divider}` : 'none',
+                  background: done ? '#10b98106' : 'transparent',
+                  cursor: 'pointer', textAlign: 'left',
+                  transition: 'background 0.12s',
+                }}
+              >
+                {/* Checkbox */}
+                <div style={{
+                  width: 18, height: 18, borderRadius: 4, flexShrink: 0, marginTop: 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: done ? '#10b981' : 'transparent',
+                  border: `2px solid ${done ? '#10b981' : t.brI}`,
+                  boxShadow: done ? '0 0 6px #10b98144' : 'none',
+                  transition: 'all 0.15s',
+                }}>
+                  {done && <Check size={9} color="white" strokeWidth={3} />}
+                </div>
+
+                {/* Question number badge */}
+                <span style={{
+                  padding: '1px 6px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+                  flexShrink: 0, marginTop: 2, whiteSpace: 'nowrap',
+                  color: isPartB ? color : t.t30,
+                  background: isPartB ? `${color}10` : t.subtleBg,
+                  border: `1px solid ${isPartB ? `${color}22` : t.brS}`,
+                }}>
+                  {q.qNum.replace(' (Part A)', 'A').replace(' (Part B)', 'B')}
+                </span>
+
+                {/* Marks badge */}
+                <span style={{
+                  padding: '1px 5px', borderRadius: 4, fontSize: 10, fontWeight: 600,
+                  flexShrink: 0, marginTop: 2,
+                  color: t.t22, background: t.subtleBg, border: `1px solid ${t.brS}`,
+                }}>
+                  {q.marks}m
+                </span>
+
+                {/* Question text */}
+                <p style={{
+                  flex: 1, fontSize: 12, color: done ? t.t22 : t.t40,
+                  lineHeight: 1.45,
+                  textDecoration: done ? 'line-through' : 'none',
+                  textDecorationColor: t.t15,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}>
+                  {q.text}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t }) {
   const {
     toggleTopicWatched,
     toggleTopicStudied,
-    toggleModuleQP,
     toggleModuleRevision,
   } = useProgress();
 
-  const watchedCount  = moduleData.topics.filter(tp => detail.watched?.[tp.id]).length;
-  const studiedCount  = moduleData.topics.filter(tp => detail.studied?.[tp.id]).length;
-  const qpDoneCount   = qps.filter((_, i) => detail.qp?.[i]).length;
-  const revDoneCount  = [0, 1, 2].filter(i => detail.revision?.[i]).length;
-  const total         = moduleData.topics.length;
+  const allQs        = useMemo(() => moduleData.pyqQuestions || [], [moduleData]);
+  const watchedCount = moduleData.topics.filter(tp => detail.watched?.[tp.id]).length;
+  const studiedCount = moduleData.topics.filter(tp => detail.studied?.[tp.id]).length;
+  const qDoneCount   = allQs.filter(q => detail.qp?.[q.id]).length;
+  const revDoneCount = [0, 1, 2].filter(i => detail.revision?.[i]).length;
+  const total        = moduleData.topics.length;
+
+  // Group questions by qpId, preserving qps order
+  const questionsByQP = useMemo(() =>
+    qps.map(qp => ({
+      qp,
+      questions: allQs.filter(q => q.qpId === qp.id),
+    })).filter(g => g.questions.length > 0),
+  [qps, allQs]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
@@ -100,7 +244,7 @@ function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t })
         {[
           { label: `${watchedCount}/${total} Watched`, active: watchedCount === total, c: '#6366f1' },
           { label: `${studiedCount}/${total} Studied`, active: studiedCount === total, c: color },
-          { label: `${qpDoneCount}/${qps.length} QPs Done`, active: qpDoneCount === qps.length, c: '#10b981' },
+          { label: `${qDoneCount}/${allQs.length} Qs Done`, active: qDoneCount === allQs.length, c: '#10b981' },
           { label: `${revDoneCount}/3 Revised`, active: revDoneCount === 3, c: '#f59e0b' },
         ].map(chip => (
           <div key={chip.label} style={{
@@ -166,54 +310,20 @@ function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t })
 
       {/* ── Question Papers ── */}
       <div>
-        <SectionLabel label={`Question Papers (${qps.length} QPs)`} t={t} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
-          {qps.map((qp, i) => {
-            const done = !!detail.qp?.[i];
-            return (
-              <button
-                key={qp.id}
-                onClick={() => toggleModuleQP(subjectId, moduleId, i)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '13px 15px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                  background: done ? '#10b98112' : t.card,
-                  border: `1px solid ${done ? '#10b98130' : t.brC}`,
-                  transition: 'all 0.15s',
-                }}
-              >
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: done ? '#10b98118' : t.subtleBg,
-                  border: `1px solid ${done ? '#10b98128' : t.brS}`,
-                  fontSize: 11, fontWeight: 700,
-                  color: done ? '#10b981' : t.t22,
-                }}>
-                  QP{i + 1}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: done ? '#10b981' : t.t1b }}>
-                    {qp.label}
-                  </p>
-                  <p style={{ fontSize: 11, color: t.t20, marginTop: 1 }}>
-                    {done ? 'Completed' : 'Not done'}
-                  </p>
-                </div>
-                {/* Plain div — click handled by outer button */}
-                <div style={{
-                  width: 22, height: 22, borderRadius: 6, flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: done ? '#10b981' : 'transparent',
-                  border: `2px solid ${done ? '#10b981' : t.brCD}`,
-                  boxShadow: done ? '0 0 8px #10b98144' : 'none',
-                  transition: 'all 0.18s ease',
-                }}>
-                  {done && <Check size={11} color="white" strokeWidth={3} />}
-                </div>
-              </button>
-            );
-          })}
+        <SectionLabel label={`Question Papers — ${qDoneCount}/${allQs.length} done`} t={t} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {questionsByQP.map(({ qp, questions }) => (
+            <QPSection
+              key={qp.id}
+              qp={qp}
+              questions={questions}
+              detail={detail}
+              subjectId={subjectId}
+              moduleId={moduleId}
+              color={color}
+              t={t}
+            />
+          ))}
         </div>
       </div>
 

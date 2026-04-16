@@ -122,11 +122,21 @@ export function ProgressProvider({ children }) {
     });
   };
 
-  const toggleModuleQP = (subjectId, moduleId, qpIdx) => {
+  // Toggle a single question within a QP
+  const toggleQPQuestion = (subjectId, moduleId, questionId) => {
     const d = getDetail(subjectId, moduleId);
     applyDetail(subjectId, moduleId, {
-      ...d, qp: { ...d.qp, [qpIdx]: !d.qp[qpIdx] },
+      ...d, qp: { ...d.qp, [questionId]: !d.qp[questionId] },
     });
+  };
+
+  // Check all / uncheck all questions for a QP paper
+  const bulkToggleQP = (subjectId, moduleId, questions) => {
+    const d = getDetail(subjectId, moduleId);
+    const allDone = questions.every(q => d.qp?.[q.id]);
+    const newQp = { ...d.qp };
+    questions.forEach(q => { newQp[q.id] = !allDone; });
+    applyDetail(subjectId, moduleId, { ...d, qp: newQp });
   };
 
   const toggleModuleRevision = (subjectId, moduleId, revIdx) => {
@@ -153,9 +163,12 @@ export function ProgressProvider({ children }) {
         if (modData) {
           const topics = modData.topics;
           const detail = progress[subjectId]?.moduleDetail?.[m.id] || {};
+          const allQs       = modData.pyqQuestions || [];
           const watchedFrac = topics.filter(t => detail.watched?.[t.id]).length / topics.length;
           const studiedFrac = topics.filter(t => detail.studied?.[t.id]).length / topics.length;
-          const qpFrac      = qps.filter((_, i) => detail.qp?.[i]).length / qps.length;
+          const qpFrac      = allQs.length > 0
+            ? allQs.filter(q => detail.qp?.[q.id]).length / allQs.length
+            : 0;
           const revFrac     = [0, 1, 2].filter(i => detail.revision?.[i]).length / 3;
           doneWeight += watchedFrac * 0.20 + studiedFrac * 0.40 + qpFrac * 0.25 + revFrac * 0.15;
         }
@@ -172,7 +185,8 @@ export function ProgressProvider({ children }) {
       toggleModule,
       toggleTopicWatched,
       toggleTopicStudied,
-      toggleModuleQP,
+      toggleQPQuestion,
+      bulkToggleQP,
       toggleModuleRevision,
       getModuleDetail,
       getSubjectCompletion,

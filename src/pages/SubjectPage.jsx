@@ -116,9 +116,10 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
   if (!moduleData) return null;
 
   const topics      = moduleData.topics;
+  const allQs       = moduleData.pyqQuestions || [];
   const watchedCnt  = topics.filter(tp => detail.watched?.[tp.id]).length;
   const studiedCnt  = topics.filter(tp => detail.studied?.[tp.id]).length;
-  const qpDoneCnt   = qps.filter((_, i) => detail.qp?.[i]).length;
+  const qDoneCnt    = allQs.filter(q => detail.qp?.[q.id]).length;
   const revDoneCnt  = [0, 1, 2].filter(i => detail.revision?.[i]).length;
   const allStudied  = studiedCnt === topics.length;
 
@@ -191,14 +192,18 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
               {studiedCnt}/{topics.length}
             </span>
           </div>
-          {/* QP pips */}
+          {/* QP pips — filled when all questions for that paper are done */}
           <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-            {qps.map((_, i) => (
-              <div key={i} style={{
-                width: 6, height: 6, borderRadius: 2,
-                background: detail.qp?.[i] ? '#10b981' : t.brCD,
-              }} />
-            ))}
+            {qps.map(qp => {
+              const qpQs   = allQs.filter(q => q.qpId === qp.id);
+              const qpDone = qpQs.length > 0 && qpQs.every(q => detail.qp?.[q.id]);
+              return (
+                <div key={qp.id} style={{
+                  width: 6, height: 6, borderRadius: 2,
+                  background: qpDone ? '#10b981' : t.brCD,
+                }} />
+              );
+            })}
           </div>
           {/* Revision pips */}
           <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
