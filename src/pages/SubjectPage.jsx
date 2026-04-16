@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { SUBJECTS } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, hasModuleDetail } from '../data/cgModuleData';
+import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
+import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
+
+function getSubjectInfo(subjectId) {
+  if (subjectId === 'CST302') return { moduleDataMap: CD_MODULE_DATA,  qps: CD_QPS  };
+  if (subjectId === 'CST306') return { moduleDataMap: AAD_MODULE_DATA, qps: AAD_QPS };
+  return { moduleDataMap: CG_MODULE_DATA, qps: CG_QPS };
+}
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -101,7 +109,8 @@ function SimpleModuleItem({ mod, done, color, isLastOdd, onToggle, t }) {
 /* ── Detailed module card (CG M1/M2) ── */
 function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
   const { getModuleDetail } = useProgress();
-  const moduleData = CG_MODULE_DATA[mod.id];
+  const { moduleDataMap, qps } = getSubjectInfo(subjectId);
+  const moduleData = moduleDataMap[mod.id];
   const detail     = getModuleDetail(subjectId, mod.id);
 
   if (!moduleData) return null;
@@ -109,7 +118,7 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
   const topics      = moduleData.topics;
   const watchedCnt  = topics.filter(tp => detail.watched?.[tp.id]).length;
   const studiedCnt  = topics.filter(tp => detail.studied?.[tp.id]).length;
-  const qpDoneCnt   = CG_QPS.filter((_, i) => detail.qp?.[i]).length;
+  const qpDoneCnt   = qps.filter((_, i) => detail.qp?.[i]).length;
   const revDoneCnt  = [0, 1, 2].filter(i => detail.revision?.[i]).length;
   const allStudied  = studiedCnt === topics.length;
 
@@ -184,7 +193,7 @@ function DetailedModuleItem({ mod, subjectId, color, isLastOdd, onOpen, t }) {
           </div>
           {/* QP pips */}
           <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-            {CG_QPS.map((_, i) => (
+            {qps.map((_, i) => (
               <div key={i} style={{
                 width: 6, height: 6, borderRadius: 2,
                 background: detail.qp?.[i] ? '#10b981' : t.brCD,

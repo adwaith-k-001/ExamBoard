@@ -242,9 +242,10 @@ export const CG_MODULE_DATA = {
   },
 };
 
-// All CG modules now have detailed data
 export const DETAILED_MODULES = {
   CST304: [1, 2, 3, 4, 5],
+  CST302: [1, 2, 3, 4, 5],
+  CST306: [1, 2, 3, 4, 5],
 };
 
 export function hasModuleDetail(subjectId, moduleId) {

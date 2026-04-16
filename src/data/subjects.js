@@ -11,9 +11,9 @@ export const SUBJECTS = [
     modules: [
       { id: 1, name: 'Introduction to Compilers & Lexical Analysis' },
       { id: 2, name: 'Syntax Analysis' },
-      { id: 3, name: 'Semantic Analysis & Intermediate Code Generation' },
-      { id: 4, name: 'Code Optimization' },
-      { id: 5, name: 'Code Generation & Runtime Environments' },
+      { id: 3, name: 'Bottom-Up Parsing' },
+      { id: 4, name: 'Syntax Directed Translation & Intermediate Code Generation' },
+      { id: 5, name: 'Code Optimization and Code Generation' },
     ],
   },
   {
@@ -67,11 +67,11 @@ export const SUBJECTS = [
     priority: 'HIGH',
     color: '#ec4899',
     modules: [
-      { id: 1, name: 'Introduction & Divide and Conquer' },
-      { id: 2, name: 'Greedy Algorithms' },
-      { id: 3, name: 'Dynamic Programming' },
-      { id: 4, name: 'Backtracking & Branch and Bound' },
-      { id: 5, name: 'NP-Completeness' },
+      { id: 1, name: 'Introduction to Algorithm Analysis' },
+      { id: 2, name: 'Advanced Data Structures and Graph Algorithms' },
+      { id: 3, name: 'Divide & Conquer and Greedy Strategy' },
+      { id: 4, name: 'Dynamic Programming, Backtracking and Branch & Bound' },
+      { id: 5, name: 'Introduction to Complexity Theory' },
     ],
   },
   {

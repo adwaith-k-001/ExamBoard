@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { SUBJECTS } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, getTopicPriority } from '../data/cgModuleData';
+import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
+import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
+
+function getSubjectData(subjectId, moduleId) {
+  if (subjectId === 'CST302') return { moduleData: CD_MODULE_DATA[moduleId],  qps: CD_QPS  };
+  if (subjectId === 'CST306') return { moduleData: AAD_MODULE_DATA[moduleId], qps: AAD_QPS };
+  return { moduleData: CG_MODULE_DATA[moduleId], qps: CG_QPS };
+}
 import { useProgress } from '../context/ProgressContext';
 import { useTheme } from '../context/ThemeContext';
 import { VideoModal, PdfViewerModal } from '../components/ResourceModals';
@@ -70,7 +78,7 @@ function CheckBox({ done, onClick, color }) {
 /* ═══════════════════════════════
    Progress Tab
 ═══════════════════════════════ */
-function ProgressTab({ moduleData, detail, subjectId, moduleId, color, t }) {
+function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t }) {
   const {
     toggleTopicWatched,
     toggleTopicStudied,
@@ -80,7 +88,7 @@ function ProgressTab({ moduleData, detail, subjectId, moduleId, color, t }) {
 
   const watchedCount  = moduleData.topics.filter(tp => detail.watched?.[tp.id]).length;
   const studiedCount  = moduleData.topics.filter(tp => detail.studied?.[tp.id]).length;
-  const qpDoneCount   = CG_QPS.filter((_, i) => detail.qp?.[i]).length;
+  const qpDoneCount   = qps.filter((_, i) => detail.qp?.[i]).length;
   const revDoneCount  = [0, 1, 2].filter(i => detail.revision?.[i]).length;
   const total         = moduleData.topics.length;
 
@@ -92,7 +100,7 @@ function ProgressTab({ moduleData, detail, subjectId, moduleId, color, t }) {
         {[
           { label: `${watchedCount}/${total} Watched`, active: watchedCount === total, c: '#6366f1' },
           { label: `${studiedCount}/${total} Studied`, active: studiedCount === total, c: color },
-          { label: `${qpDoneCount}/4 QPs Done`, active: qpDoneCount === 4, c: '#10b981' },
+          { label: `${qpDoneCount}/${qps.length} QPs Done`, active: qpDoneCount === qps.length, c: '#10b981' },
           { label: `${revDoneCount}/3 Revised`, active: revDoneCount === 3, c: '#f59e0b' },
         ].map(chip => (
           <div key={chip.label} style={{
@@ -158,9 +166,9 @@ function ProgressTab({ moduleData, detail, subjectId, moduleId, color, t }) {
 
       {/* ── Question Papers ── */}
       <div>
-        <SectionLabel label="Question Papers (4 QPs)" t={t} />
+        <SectionLabel label={`Question Papers (${qps.length} QPs)`} t={t} />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
-          {CG_QPS.map((qp, i) => {
+          {qps.map((qp, i) => {
             const done = !!detail.qp?.[i];
             return (
               <button
@@ -589,9 +597,9 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
   const { getModuleDetail } = useProgress();
   const [activeTab, setActiveTab] = useState('progress');
 
-  const subject    = SUBJECTS.find(s => s.id === subjectId);
-  const moduleData = CG_MODULE_DATA[moduleId];
-  const modMeta    = subject?.modules.find(m => m.id === moduleId);
+  const subject                = SUBJECTS.find(s => s.id === subjectId);
+  const { moduleData, qps }   = getSubjectData(subjectId, moduleId);
+  const modMeta                = subject?.modules.find(m => m.id === moduleId);
   const detail     = getModuleDetail(subjectId, moduleId);
 
   if (!subject || !moduleData || !modMeta) return null;
@@ -642,7 +650,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
             {modMeta.name}
           </h1>
           <p style={{ fontSize: 12, color: t.t25, marginTop: 6 }}>
-            {moduleData.topics.length} topics · 4 QPs · 3 revisions
+            {moduleData.topics.length} topics · {qps.length} QPs · 3 revisions
           </p>
         </div>
       </div>
@@ -680,6 +688,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
       {activeTab === 'progress' && (
         <ProgressTab
           moduleData={moduleData}
+          qps={qps}
           detail={detail}
           subjectId={subjectId}
           moduleId={moduleId}
