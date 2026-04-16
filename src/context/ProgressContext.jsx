@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { SUBJECTS } from '../data/subjects';
-import { hasModuleDetail, CG_MODULE_DATA } from '../data/cgModuleData';
+import { hasModuleDetail, CG_MODULE_DATA, CG_QPS } from '../data/cgModuleData';
+import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
+import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
+
+function getModuleMap(subjectId) {
+  if (subjectId === 'CST302') return { dataMap: CD_MODULE_DATA,  qps: CD_QPS  };
+  if (subjectId === 'CST306') return { dataMap: AAD_MODULE_DATA, qps: AAD_QPS };
+  return { dataMap: CG_MODULE_DATA, qps: CG_QPS };
+}
 import { useAuth } from './AuthContext';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -136,13 +144,14 @@ export function ProgressProvider({ children }) {
     let doneWeight = 0;
     subject.modules.forEach((m) => {
       if (hasModuleDetail(subjectId, m.id)) {
-        const modData = CG_MODULE_DATA[m.id];
+        const { dataMap, qps } = getModuleMap(subjectId);
+        const modData = dataMap[m.id];
         if (modData) {
           const topics = modData.topics;
           const detail = progress[subjectId]?.moduleDetail?.[m.id] || {};
           const watchedFrac = topics.filter(t => detail.watched?.[t.id]).length / topics.length;
           const studiedFrac = topics.filter(t => detail.studied?.[t.id]).length / topics.length;
-          const qpFrac      = [0, 1, 2, 3].filter(i => detail.qp?.[i]).length / 4;
+          const qpFrac      = qps.filter((_, i) => detail.qp?.[i]).length / qps.length;
           const revFrac     = [0, 1, 2].filter(i => detail.revision?.[i]).length / 3;
           doneWeight += watchedFrac * 0.20 + studiedFrac * 0.40 + qpFrac * 0.25 + revFrac * 0.15;
         }
