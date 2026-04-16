@@ -167,7 +167,7 @@ function SubjectCard({ subject, onSelect, t }) {
 }
 
 /* ── Timeline item ── */
-function TimelineItem({ subject, daysFromNow, t }) {
+function TimelineItem({ subject, daysFromNow, studyDays, t }) {
   const isPast  = daysFromNow < 0;
   const isNext  = daysFromNow >= 0 && daysFromNow <= 1;
   const date    = new Date(subject.examDate);
@@ -222,6 +222,23 @@ function TimelineItem({ subject, daysFromNow, t }) {
           {isPast ? 'done' : daysFromNow === 0 ? 'today' : dayStr}
         </p>
       </div>
+
+      {/* Study window */}
+      {studyDays != null && (
+        <div style={{
+          borderTop: `1px solid ${isNext ? `${subject.color}18` : t.schBr}`,
+          paddingTop: 7, marginTop: 1,
+          display: 'flex', alignItems: 'center', gap: 5,
+        }}>
+          <span style={{ fontSize: 9, lineHeight: 1 }}>⏱</span>
+          <span style={{
+            fontSize: 10, fontWeight: 600,
+            color: isNext ? subject.color : t.t25,
+          }}>
+            {studyDays}d to prep
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -381,9 +398,12 @@ export default function Home({ onSelectSubject }) {
       <div>
         <SectionLabel label="Exam Schedule" t={t} />
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(6, 1fr)', gap: 10 }}>
-          {SUBJECTS.map(s => {
+          {SUBJECTS.map((s, i) => {
             const diffDays = Math.ceil((new Date(s.examDate) - now) / 864e5);
-            return <TimelineItem key={s.id} subject={s} daysFromNow={diffDays} t={t} />;
+            const studyDays = i === 0
+              ? Math.max(0, Math.ceil((new Date(s.examDate) - now) / 864e5))
+              : Math.ceil((new Date(s.examDate) - new Date(SUBJECTS[i - 1].examDate)) / 864e5);
+            return <TimelineItem key={s.id} subject={s} daysFromNow={diffDays} studyDays={studyDays} t={t} />;
           })}
         </div>
       </div>
