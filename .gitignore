@@ -14,6 +14,12 @@ dist-ssr
 .env
 .env.*
 
+# Android build outputs
+android/.gradle
+android/app/build
+android/build
+android/capacitor-cordova-android-plugins/build
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

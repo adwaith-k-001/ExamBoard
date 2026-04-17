@@ -2,7 +2,7 @@ import { useProgress } from '../context/ProgressContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useElective } from '../context/ElectiveContext';
-import { BookOpen, LayoutDashboard, LogOut, Timer } from 'lucide-react';
+import { BookOpen, LayoutDashboard, LogOut, Timer, BarChart2 } from 'lucide-react';
 import { getSubjectColor } from '../data/subjects';
 
 /* ── SVG progress ring ── */
@@ -242,6 +242,13 @@ export default function Sidebar({ activeSubject, onSelectSubject, activePage, on
             onClick={() => onSelectPage('timer')}
             icon={<Timer size={15} />}
             label="Study Timer"
+            t={t}
+          />
+          <NavItem
+            isActive={activePage === 'stats'}
+            onClick={() => onSelectPage('stats')}
+            icon={<BarChart2 size={15} />}
+            label="Statistics"
             t={t}
           />
         </div>

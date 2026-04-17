@@ -4,10 +4,11 @@ import Home from './Home';
 import SubjectPage from './SubjectPage';
 import ModuleDetailPage from './ModuleDetailPage';
 import TimerPage from './TimerPage';
+import StatsPage from './StatsPage';
 import { ALL_SUBJECTS } from '../data/subjects';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { ChevronRight, Calendar, Sun, Moon, Menu, Timer } from 'lucide-react';
+import { ChevronRight, Calendar, Sun, Moon, Menu, Timer, BarChart2 } from 'lucide-react';
 
 export default function Dashboard() {
   const { t, mode, toggle } = useTheme();
@@ -107,6 +108,11 @@ export default function Dashboard() {
                   <Timer size={12} />
                   Study Timer
                 </span>
+              ) : activePage === 'stats' ? (
+                <span style={{ color: t.t40, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <BarChart2 size={12} />
+                  Statistics
+                </span>
               ) : subject ? (
                 <>
                   <button
@@ -178,6 +184,8 @@ export default function Dashboard() {
         <main style={{ flex: 1, overflowY: 'auto' }}>
           {activePage === 'timer' ? (
             <TimerPage />
+          ) : activePage === 'stats' ? (
+            <StatsPage />
           ) : activeSubject === null ? (
             <Home onSelectSubject={handleSelectSubject} />
           ) : activeModule != null ? (

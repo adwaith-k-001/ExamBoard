@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ExamBoard</string>
+    <string name="title_activity_main">ExamBoard</string>
+    <string name="package_name">com.examboard.app</string>
+    <string name="custom_url_scheme">com.examboard.app</string>
+</resources>
