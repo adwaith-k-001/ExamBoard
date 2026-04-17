@@ -364,29 +364,31 @@ export default function Login() {
             </button>
           </form>
 
-          {/* ── Divider ── */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 12, marginTop: 22,
-          }}>
-            <div style={{ flex: 1, height: 1, background: t.brS }} />
-            <span style={{ fontSize: 11, color: t.t18, whiteSpace: 'nowrap' }}>
-              or continue with
-            </span>
-            <div style={{ flex: 1, height: 1, background: t.brS }} />
-          </div>
-
-          {/* ── Google Sign-In ── */}
-          <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme={mode === 'dark' ? 'filled_black' : 'outline'}
-              shape="rectangular"
-              size="large"
-              text="signin_with"
-              logo_alignment="left"
-            />
-          </div>
+          {/* ── Google Sign-In (web only — blocked in Android WebView) ── */}
+          {!window.Capacitor && (
+            <>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 12, marginTop: 22,
+              }}>
+                <div style={{ flex: 1, height: 1, background: t.brS }} />
+                <span style={{ fontSize: 11, color: t.t18, whiteSpace: 'nowrap' }}>
+                  or continue with
+                </span>
+                <div style={{ flex: 1, height: 1, background: t.brS }} />
+              </div>
+              <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme={mode === 'dark' ? 'filled_black' : 'outline'}
+                  shape="rectangular"
+                  size="large"
+                  text="signin_with"
+                  logo_alignment="left"
+                />
+              </div>
+            </>
+          )}
 
           <p style={{
             fontSize: 12, color: t.t15,
