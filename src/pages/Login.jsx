@@ -11,6 +11,14 @@ import { Sun, Moon } from 'lucide-react';
 
 const isNative = !!window.Capacitor;
 
+if (isNative) {
+  GoogleAuth.initialize({
+    clientId: '154690456525-di657ga7kntillmpbkmg4h7e4mm6fs13.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
+    grantOfflineAccess: true,
+  });
+}
+
 export default function Login() {
   const { login, loginWithGoogle } = useAuth();
   const navigate     = useNavigate();
