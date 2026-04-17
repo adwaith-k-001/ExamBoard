@@ -46,19 +46,15 @@ export function StudyLogProvider({ children }) {
   }
 
   const addSession = (session) => {
-    setSessions(prev => {
-      const next = [session, ...prev];
-      persist(next);
-      return next;
-    });
+    const next = [session, ...sessions];
+    setSessions(next);
+    persist(next);
   };
 
   const deleteSession = (id) => {
-    setSessions(prev => {
-      const next = prev.filter(s => s.id !== id);
-      persist(next);
-      return next;
-    });
+    const next = sessions.filter(s => s.id !== id);
+    setSessions(next);
+    persist(next);
   };
 
   return (
