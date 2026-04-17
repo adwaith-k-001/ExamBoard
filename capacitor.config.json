@@ -1,5 +1,12 @@
 {
   "appId": "com.examboard.app",
   "appName": "ExamBoard",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "154690456525-di657ga7kntillmpbkmg4h7e4mm6fs13.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
 }
