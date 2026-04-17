@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProgressProvider } from './context/ProgressContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ElectiveProvider } from './context/ElectiveContext';
+import { StudyLogProvider } from './context/StudyLogContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
@@ -50,7 +51,9 @@ export default function App() {
           <AuthProvider>
             <ElectiveProvider>
               <ProgressProvider>
-                <AppRoutes />
+                <StudyLogProvider>
+                  <AppRoutes />
+                </StudyLogProvider>
               </ProgressProvider>
             </ElectiveProvider>
           </AuthProvider>

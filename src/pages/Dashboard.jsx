@@ -3,14 +3,16 @@ import Sidebar from '../components/Sidebar';
 import Home from './Home';
 import SubjectPage from './SubjectPage';
 import ModuleDetailPage from './ModuleDetailPage';
+import TimerPage from './TimerPage';
 import { ALL_SUBJECTS } from '../data/subjects';
 import { useTheme } from '../context/ThemeContext';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { ChevronRight, Calendar, Sun, Moon, Menu } from 'lucide-react';
+import { ChevronRight, Calendar, Sun, Moon, Menu, Timer } from 'lucide-react';
 
 export default function Dashboard() {
   const { t, mode, toggle } = useTheme();
   const isMobile = useIsMobile();
+  const [activePage,    setActivePage]    = useState('home'); // 'home' | 'timer'
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeModule,  setActiveModule]  = useState(null);
   const [sidebarOpen,   setSidebarOpen]   = useState(false);
@@ -20,7 +22,13 @@ export default function Dashboard() {
     ? subject.modules.find(m => m.id === activeModule)
     : null;
 
+  function handleSelectPage(page) {
+    setActivePage(page);
+    if (isMobile) setSidebarOpen(false);
+  }
+
   function handleSelectSubject(subjectId) {
+    setActivePage('home');
     setActiveSubject(subjectId);
     setActiveModule(null);
     if (isMobile) setSidebarOpen(false);
@@ -52,6 +60,8 @@ export default function Dashboard() {
       )}
 
       <Sidebar
+        activePage={activePage}
+        onSelectPage={handleSelectPage}
         activeSubject={activeSubject}
         onSelectSubject={handleSelectSubject}
         isMobile={isMobile}
@@ -92,7 +102,12 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
               <span style={{ color: t.t20 }}>S6</span>
               <ChevronRight size={12} color={t.t12} />
-              {subject ? (
+              {activePage === 'timer' ? (
+                <span style={{ color: t.t40, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Timer size={12} />
+                  Study Timer
+                </span>
+              ) : subject ? (
                 <>
                   <button
                     onClick={() => handleSelectSubject(activeSubject)}
@@ -161,7 +176,9 @@ export default function Dashboard() {
 
         {/* ── Scrollable content ── */}
         <main style={{ flex: 1, overflowY: 'auto' }}>
-          {activeSubject === null ? (
+          {activePage === 'timer' ? (
+            <TimerPage />
+          ) : activeSubject === null ? (
             <Home onSelectSubject={handleSelectSubject} />
           ) : activeModule != null ? (
             <ModuleDetailPage

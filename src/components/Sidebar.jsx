@@ -2,7 +2,7 @@ import { useProgress } from '../context/ProgressContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useElective } from '../context/ElectiveContext';
-import { BookOpen, LayoutDashboard, LogOut } from 'lucide-react';
+import { BookOpen, LayoutDashboard, LogOut, Timer } from 'lucide-react';
 import { getSubjectColor } from '../data/subjects';
 
 /* ── SVG progress ring ── */
@@ -166,7 +166,7 @@ function SubjectItem({ subject, isActive, pct, diffDays, isPast, onClick, t }) {
 }
 
 /* ── Main sidebar ── */
-export default function Sidebar({ activeSubject, onSelectSubject, isMobile, isOpen, onClose }) {
+export default function Sidebar({ activeSubject, onSelectSubject, activePage, onSelectPage, isMobile, isOpen, onClose }) {
   const { t } = useTheme();
   const { getSubjectCompletion } = useProgress();
   const { logout } = useAuth();
@@ -229,12 +229,19 @@ export default function Sidebar({ activeSubject, onSelectSubject, isMobile, isOp
         flex: 1, padding: '14px 10px', overflowY: 'auto',
         display: 'flex', flexDirection: 'column', gap: 22,
       }}>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           <NavItem
-            isActive={activeSubject === null}
-            onClick={() => onSelectSubject(null)}
+            isActive={activePage === 'home' && activeSubject === null}
+            onClick={() => { onSelectPage('home'); onSelectSubject(null); }}
             icon={<LayoutDashboard size={15} />}
             label="Overview"
+            t={t}
+          />
+          <NavItem
+            isActive={activePage === 'timer'}
+            onClick={() => onSelectPage('timer')}
+            icon={<Timer size={15} />}
+            label="Study Timer"
             t={t}
           />
         </div>
