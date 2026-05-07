@@ -246,6 +246,7 @@ export const DETAILED_MODULES = {
   CST304: [1, 2, 3, 4, 5],
   CST302: [1, 2, 3, 4, 5],
   CST306: [1, 2, 3, 4, 5],
+  HUT300: [1, 2, 3, 4, 5],
 };
 
 export function hasModuleDetail(subjectId, moduleId) {

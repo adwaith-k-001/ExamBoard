@@ -3,10 +3,12 @@ import { ALL_SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, hasModuleDetail } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
+import { IEFT_MODULE_DATA, IEFT_QPS } from '../data/ieftModuleData';
 
 function getSubjectInfo(subjectId) {
-  if (subjectId === 'CST302') return { moduleDataMap: CD_MODULE_DATA,  qps: CD_QPS  };
-  if (subjectId === 'CST306') return { moduleDataMap: AAD_MODULE_DATA, qps: AAD_QPS };
+  if (subjectId === 'CST302') return { moduleDataMap: CD_MODULE_DATA,   qps: CD_QPS   };
+  if (subjectId === 'CST306') return { moduleDataMap: AAD_MODULE_DATA,  qps: AAD_QPS  };
+  if (subjectId === 'HUT300') return { moduleDataMap: IEFT_MODULE_DATA, qps: IEFT_QPS };
   return { moduleDataMap: CG_MODULE_DATA, qps: CG_QPS };
 }
 import { useProgress } from '../context/ProgressContext';
