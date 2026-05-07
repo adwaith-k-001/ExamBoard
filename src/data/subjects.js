@@ -85,11 +85,11 @@ const BASE_SUBJECTS = [
     priority: 'MEDIUM',
     color: '#10b981', lightColor: '#047857',
     modules: [
-      { id: 1, name: 'Introduction to IoT & IoE' },
-      { id: 2, name: 'IoT Architecture & Protocols' },
-      { id: 3, name: 'Sensors, Actuators & Connectivity' },
-      { id: 4, name: 'Cloud & Fog Computing for IoT' },
-      { id: 5, name: 'IoT Applications & Security' },
+      { id: 1, name: 'Basic Concepts and Demand & Supply Analysis' },
+      { id: 2, name: 'Production and Cost' },
+      { id: 3, name: 'Market Structure' },
+      { id: 4, name: 'Macroeconomic Concepts' },
+      { id: 5, name: 'International Trade' },
     ],
   },
   {

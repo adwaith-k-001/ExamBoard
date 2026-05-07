@@ -3,10 +3,12 @@ import { ALL_SUBJECTS, getSubjectColor } from '../data/subjects';
 import { CG_MODULE_DATA, CG_QPS, getTopicPriority } from '../data/cgModuleData';
 import { CD_MODULE_DATA, CD_QPS } from '../data/cdModuleData';
 import { AAD_MODULE_DATA, AAD_QPS } from '../data/aadModuleData';
+import { IEFT_MODULE_DATA, IEFT_QPS } from '../data/ieftModuleData';
 
 function getSubjectData(subjectId, moduleId) {
-  if (subjectId === 'CST302') return { moduleData: CD_MODULE_DATA[moduleId],  qps: CD_QPS  };
-  if (subjectId === 'CST306') return { moduleData: AAD_MODULE_DATA[moduleId], qps: AAD_QPS };
+  if (subjectId === 'CST302') return { moduleData: CD_MODULE_DATA[moduleId],   qps: CD_QPS   };
+  if (subjectId === 'CST306') return { moduleData: AAD_MODULE_DATA[moduleId],  qps: AAD_QPS  };
+  if (subjectId === 'HUT300') return { moduleData: IEFT_MODULE_DATA[moduleId], qps: IEFT_QPS };
   return { moduleData: CG_MODULE_DATA[moduleId], qps: CG_QPS };
 }
 import { useProgress } from '../context/ProgressContext';
@@ -382,7 +384,7 @@ function ProgressTab({ moduleData, qps, detail, subjectId, moduleId, color, t })
 /* ═══════════════════════════════
    Statistics Tab
 ═══════════════════════════════ */
-function StatisticsTab({ moduleData, t }) {
+function StatisticsTab({ moduleData, qps, t }) {
   const [expandedTopic, setExpandedTopic] = useState(null);
   const totalMarks = Object.values(moduleData.topicWeightage).reduce((a, b) => a + b, 0);
   const maxMarks   = Math.max(...Object.values(moduleData.topicWeightage));
@@ -513,7 +515,7 @@ function StatisticsTab({ moduleData, t }) {
                       </p>
                     ) : (
                       questions.map((q, idx) => {
-                        const qp = CG_QPS.find(qp => qp.id === q.qpId);
+                        const qp = qps.find(qp => qp.id === q.qpId);
                         return (
                           <div key={q.id} style={{
                             display: 'flex', alignItems: 'flex-start', gap: 10,
@@ -808,7 +810,7 @@ export default function ModuleDetailPage({ subjectId, moduleId }) {
           />
         )}
         {activeTab === 'statistics' && (
-          <StatisticsTab moduleData={moduleData} t={t} />
+          <StatisticsTab moduleData={moduleData} qps={qps} t={t} />
         )}
         {activeTab === 'resources' && (
           <ResourcesTab subject={subject} moduleId={moduleId} color={color} t={t} />
